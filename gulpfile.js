@@ -28,21 +28,21 @@ const tasks = {
 };
 
 //Paths
-const PATHS_ROOT = "./resources/";
+const PATHS_ROOT = "./resources";
 
 const paths = {
 
     ROOT: `${PATHS_ROOT}`,
-    BUILD: `${PATHS_ROOT}build/`,
-    SOURCE: `${PATHS_ROOT}source/`
+    BUILD: `${PATHS_ROOT}/build`,
+    SOURCE: `${PATHS_ROOT}/source`
 };
 
 //Folders
 const folders = {
 
-    JS: "js/",
-    CSS: "css/",
-    SASS: "sass/"
+    JS: "js",
+    CSS: "css",
+    SASS: "sass"
 };
 
 //Files
@@ -57,7 +57,7 @@ const files = {
 //Task Transpile JavaScript
 gulp.task(tasks.TRANSPILE_JS, () => {
 
-    gulp.src(`${paths.SOURCE}${folders.JS}${files.JS}`)
+    gulp.src(`${paths.SOURCE}/${folders.JS}/${files.JS}`)
         .pipe(
             webpackStream({
                 module: {
@@ -79,14 +79,14 @@ gulp.task(tasks.TRANSPILE_JS, () => {
                 devtool: (config.DEVELOPMENT) ? "inline-source-map" : ""
             }, webpack)
             .on("error", (error) => gulpUtil.log(error)))
-        .pipe(gulp.dest(`${paths.BUILD}${folders.JS}`))
+        .pipe(gulp.dest(`${paths.BUILD}/${folders.JS}`))
         .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
 });
 
 //Task Transpile Sass
 gulp.task(tasks.TRANSPILE_SASS, () => {
 
-    gulp.src(`${paths.SOURCE}${folders.SASS}${files.SASS}`)
+    gulp.src(`${paths.SOURCE}/${folders.SASS}/${files.SASS}`)
         .pipe((config.DEVELOPMENT) ? sourceMaps.init() : gulpUtil.noop())
         .pipe(
             sass({
@@ -99,14 +99,14 @@ gulp.task(tasks.TRANSPILE_SASS, () => {
             ]))
         .pipe((config.PRODUCTION) ? minCSS() : gulpUtil.noop())
         .pipe((config.DEVELOPMENT) ? sourceMaps.write() : gulpUtil.noop())
-        .pipe(gulp.dest(`${paths.BUILD}${folders.CSS}`))
+        .pipe(gulp.dest(`${paths.BUILD}/${folders.CSS}`))
         .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
 });
 
 //Task Transpile HTML
 gulp.task(tasks.TRANSPILE_HTML, () => {
 
-    gulp.src(`${paths.SOURCE}${files.HTML}`)
+    gulp.src(`${paths.SOURCE}/${files.HTML}`)
         .pipe(minHTML({collapseWhitespace: true}))
         .pipe(gulp.dest(`${paths.BUILD}`))
         .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
@@ -124,8 +124,8 @@ gulp.task("default", [tasks.TRANSPILE_JS, tasks.TRANSPILE_SASS, tasks.TRANSPILE_
             }
         });
 
-        gulp.watch(`${paths.SOURCE}${folders.JS}**/*.js`, [tasks.TRANSPILE_JS]);
-        gulp.watch(`${paths.SOURCE}${folders.SASS}**/*.scss`, [tasks.TRANSPILE_SASS]);
-        gulp.watch(`${paths.SOURCE}${files.HTML}`, [tasks.TRANSPILE_HTML]);
+        gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, [tasks.TRANSPILE_JS]);
+        gulp.watch(`${paths.SOURCE}/${folders.SASS}/**/*.scss`, [tasks.TRANSPILE_SASS]);
+        gulp.watch(`${paths.SOURCE}/${files.HTML}`, [tasks.TRANSPILE_HTML]);
     }
 });
