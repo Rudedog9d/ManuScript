@@ -9,7 +9,7 @@
   "scripts": {
     "build": "electron mainElectron.js",
     "package": "gulp package",
-    "package-linux": "gulp package-linux",  
+    "package-linux": "gulp package-linux",
     "package-mac": "gulp package-mac",
     "package-windows": "gulp package-windows"
   },
@@ -19,6 +19,7 @@
     "gulp": "^3.9.1"
   },
   "dependencies": {
-    "electron-window-state": "^4.1.1"
+    "electron-window-state": "^4.1.1",
+    "jquery": "^3.2.1"
   }
 }

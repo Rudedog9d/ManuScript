@@ -1,0 +1,31 @@
+@import "./modules/reset.scss";
+
+$page-margins: 15%;
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative; /* This line makes the footer work right */
+  min-height: 100%;  /* This line makes the footer work right */
+  padding-bottom: 6rem;
+  margin: 0;
+
+}
+
+.content-center {
+  margin-left: $page-margins;
+  margin-right: $page-margins;
+}
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}

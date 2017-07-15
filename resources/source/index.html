@@ -1,15 +1,44 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <link rel="stylesheet" type="text/css" href="css/main.css">
-        <link rel="icon" type="image/png" href="./images/favicon.png">
-    </head>
-    <body>
-        <div id="app">
-        </div>
-        <h1>Hello, World!</h1>
-        <script type="text/javascript" src="./js/main.js"></script>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <!--Import Google Icon Font-->
+  <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="./css/manuscript.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css" />
+
+  <!-- Javascript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-lite.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.runtime.js"></script>
+  <script src="./js/ManuScript-0.1.js"></script>
+  <script type="text/javascript" src="./js/main.js"></script>
+  <!-- Import Templates -->
+  <script type="text/javascript" src="./js/templates.js"></script>
+
+  <link rel="icon" type="image/png" href="./static/images/favicon.png">
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="content-center">
+    Whyyy
+      <h1>Hello, World!</h1>
+      <a href="home.html">Home</a>
+  </div>
+
+  <div id="base"></div>
+
+<script>
+    $(document).ready(function () {
+        console.log(ManuScript.templates);
+        var data = {username: "Rudedog9d"};
+        $('#navbar').html(ManuScript.templates.navbar.html(data));
+    });
+</script>
+</body>
 </html>
