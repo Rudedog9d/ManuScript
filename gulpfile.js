@@ -2,6 +2,7 @@
 const autoPrefixer = require("autoprefixer");
 const browserSync = require("browser-sync").create();
 const gulp = require("gulp");
+const del = require("del");
 const gulpUtil = require("gulp-util");
 const minCSS = require("gulp-clean-css");
 const minHTML = require("gulp-htmlmin");
@@ -20,25 +21,24 @@ const concat = require('gulp-concat');
 
 //Config
 const config = {
-    
+    CLEAN: gulpUtil.env.clean,
     DEVELOPMENT: gulpUtil.env.development,
     PRODUCTION: gulpUtil.env.production
 };
 
 //Tasks
 const tasks = {
-
     TRANSPILE_HANDLEBARS: "tanspile-handlebars",
     TRANSPILE_JS: "transpile-js",
     TRANSPILE_SASS: "transpile-sass",
-    TRANSPILE_HTML: "transpile-html"
+    TRANSPILE_HTML: "transpile-html",
+    CLEAN: "clean"
 };
 
 //Paths
 const PATHS_ROOT = "./resources";
 
 const paths = {
-
     ROOT: `${PATHS_ROOT}`,
     BUILD: `${PATHS_ROOT}/build`,
     SOURCE: `${PATHS_ROOT}/source`
@@ -46,7 +46,6 @@ const paths = {
 
 //Folders
 const folders = {
-
     JS: "js",
     CSS: "css",
     SASS: "sass"
@@ -54,16 +53,26 @@ const folders = {
 
 //Files
 const files = {
-
     JS: "main.js",
     CSS: "main.css",
     SASS: "manuscript.scss",
     HTML: "index.html"
 };
 
+function _clean_files(dir) {
+    gulpUtil.log(`Removing files from ${dir}`);
+    return del([dir])
+}
+
+//Task Clean Built Files
+gulp.task(tasks.CLEAN, () => {
+    _clean_files(`${paths.BUILD}/${folders.JS}/*.js`);
+    _clean_files(`${paths.BUILD}/${folders.CSS}/*.css`);
+    _clean_files(`${paths.BUILD}/*.html`);
+});
+
 //Task Transpile JavaScript
 gulp.task(tasks.TRANSPILE_JS, () => {
-
     gulp.src(`${paths.SOURCE}/${folders.JS}/${files.JS}`)
         .pipe(
             webpackStream({
@@ -92,7 +101,6 @@ gulp.task(tasks.TRANSPILE_JS, () => {
 
 //Task Transpile Sass
 gulp.task(tasks.TRANSPILE_SASS, () => {
-
     gulp.src(`${paths.SOURCE}/${folders.SASS}/${files.SASS}`)
         .pipe((config.DEVELOPMENT) ? sourceMaps.init() : gulpUtil.noop())
         .pipe(
@@ -111,7 +119,7 @@ gulp.task(tasks.TRANSPILE_SASS, () => {
 });
 
 // Task Build Handlebar Templates
-gulp.task(tasks.TRANSPILE_HANDLEBARS, function(){
+gulp.task(tasks.TRANSPILE_HANDLEBARS, () => {
     gulp.src(`${paths.SOURCE}/templates/*.hbs`)
         .pipe(handlebars({
             handlebars: require('handlebars')
@@ -127,7 +135,6 @@ gulp.task(tasks.TRANSPILE_HANDLEBARS, function(){
 
 //Task Transpile HTML
 gulp.task(tasks.TRANSPILE_HTML, () => {
-
     gulp.src(`${paths.SOURCE}/${files.HTML}`)
         // Only minify in Production mode
         .pipe((config.PRODUCTION) ? minHTML({collapseWhitespace: true}) : gulpUtil.noop())
@@ -138,9 +145,8 @@ gulp.task(tasks.TRANSPILE_HTML, () => {
 
 //Task Default
 gulp.task("default", [tasks.TRANSPILE_JS, tasks.TRANSPILE_SASS, tasks.TRANSPILE_HTML, tasks.TRANSPILE_HANDLEBARS], () => {
-
     if (config.DEVELOPMENT) {
-        
+        // Start Dev server (BrowserSync)
         browserSync.init({
             server: {
                 baseDir: `${paths.BUILD}`,
@@ -148,6 +154,7 @@ gulp.task("default", [tasks.TRANSPILE_JS, tasks.TRANSPILE_SASS, tasks.TRANSPILE_
             }
         });
 
+        // Watch Source files for changes
         gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, [tasks.TRANSPILE_JS]);
         gulp.watch(`${paths.SOURCE}/${folders.SASS}/**/*.scss`, [tasks.TRANSPILE_SASS]);
         gulp.watch(`${paths.SOURCE}/${files.HTML}`, [tasks.TRANSPILE_HTML]);

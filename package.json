@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "gulp --development",
     "prod": "gulp --production",
-    "dev-prod": "gulp --development --production"
+    "dev-prod": "gulp --development --production",
+    "clean": "gulp clean"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
@@ -16,6 +17,7 @@
     "babel-loader": "^6.4.1",
     "babel-preset-latest": "^6.24.1",
     "browser-sync": "^2.18.8",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.0.4",
     "gulp-concat": "^2.6.1",

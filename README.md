@@ -42,6 +42,12 @@ npm run dev-prod
 - Generates inline sourcemaps for JavaScript and SASS files using [**Gulp Sourcemaps**](https://github.com/floridoo/gulp-sourcemaps) and [**UgfifyJS Webpack Plugin**](https://github.com/webpack-contrib/uglifyjs-webpack-plugin).
 - Opens the project in the default web browser, creates a local server and facilitates live reloading using [**Browsersync**](https://browsersync.io/).   
 
+#### **Cleaning Build Directory**
+```
+npm run clean
+```
+ - Remove compiled files in build directory
+
 #### **Building the Electron App** 
 ```bash
 npm run prod        # From root of directory
