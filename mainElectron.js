@@ -2,7 +2,7 @@
 const electron = require("electron");
 const electronWindowState = require("electron-window-state");
 const {app, protocol} = require('electron');
-const path = require('path')
+const path = require('path');
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
 const ipcMain = electron.ipcMain;
@@ -13,8 +13,12 @@ const shell = electron.shell;
 const clearStorageData = false;
 const openDevTools = false;
 
+const BASE_PATH = "./resources/build";
+console.log(`BASE PATH: ${BASE_PATH}`);
+
 //Electron Application Setup
 app.on("ready", () => {
+    console.log("APP READY");
     // PROTOCOL = 'file';
     // electron.protocol.interceptFileProtocol(PROTOCOL, (request, callback) => {
     //     console.log('URL:', request.url);
@@ -28,8 +32,8 @@ app.on("ready", () => {
     //     let url = request.url.substr(PROTOCOL.length + 1);
     //
     //     // Build complete path for node require function
-    //     console.log(`DIRNAME: ${__dirname}`);
-    //     url = path.join(__dirname, url);
+    //     console.log(`DIRNAME: ${BASE_PATH}`);
+    //     url = path.join(BASE_PATH, url);
     //
     //     // Replace backslashes by forward slashes (windows)
     //     // url = url.replace(/\\/g, '/');
@@ -46,6 +50,7 @@ app.on("ready", () => {
         defaultHeight: 600
     });
 
+    console.log("Creating Browser Window");
     const window = new BrowserWindow({
         width: windowState.width,
         minWidth: 700,
@@ -54,18 +59,20 @@ app.on("ready", () => {
         x: windowState.x,
         y: windowState.y,
         title: "ManuScript Digital Journal",
-        icon: `${__dirname}/images/Application256.png`,
+        icon: `${BASE_PATH}/images/Application256.png`,
         // backgroundColor: "#000000",
         show: false
     });
 
     window.once("ready-to-show", () => {
+        console.log("Showing Browser Window");
         window.show();
     });
 
     windowState.manage(window);
 
-    window.loadURL(`${__dirname}/index.html`);
+    console.log("Showing Homepage");
+    window.loadURL(`${BASE_PATH}/index.html`);
     // window.loadURL(`index.html`);
 
     // and load the index.html of the app.
@@ -79,61 +86,61 @@ app.on("ready", () => {
     const menuTemplate = [
         {
             label: "File",
-            submenu: [
-                {
-                    label: "Reset",
-                    click: () => { window.loadURL(`${__dirname}/index.html`); }
-                }
-            ]
+                submenu: [
+                    {
+                        label: "Reset",
+                        click: () => { window.loadURL(`${BASE_PATH}/index.html`); }
+                    }
+                ]
         },
         {
             label: "Edit",
-            submenu: [
-                {role: "undo"},
-                {role: "redo"},
-                {type: "separator"},
-                {role: "cut"},
-                {role: "copy"},
-                {role: "paste"},
-                {type: "separator"},
-                {role: "selectall"},
-                {type: "separator"},
-                {role: "delete"}
-            ]
+                submenu: [
+                    {role: "undo"},
+                    {role: "redo"},
+                    {type: "separator"},
+                    {role: "cut"},
+                    {role: "copy"},
+                    {role: "paste"},
+                    {type: "separator"},
+                    {role: "selectall"},
+                    {type: "separator"},
+                    {role: "delete"}
+                ]
         },
         {
             label: "View",
-            submenu: [
-                {label: "Layout Horizontal", click: () => { window.webContents.send("menuLayoutHorizontal"); }},
-                {label: "Layout Vertical",   click: () => { window.webContents.send("menuLayoutVertical"); }}
-            ]
+                submenu: [
+                    {label: "Layout Horizontal", click: () => { window.webContents.send("menuLayoutHorizontal"); }},
+                    {label: "Layout Vertical",   click: () => { window.webContents.send("menuLayoutVertical"); }}
+                ]
         },
         {
             label: "Window",
-            submenu: [
-                {role: "minimize"},
-                {type: "separator"},
-                {label: "Maximize", click: () => { window.maximize(); }},
-                {label: "Restore",  click: () => { window.restore(); }},
-                {type: "separator"},
-                {role: "togglefullscreen"}
-            ]
+                submenu: [
+                    {role: "minimize"},
+                    {type: "separator"},
+                    {label: "Maximize", click: () => { window.maximize(); }},
+                    {label: "Restore",  click: () => { window.restore(); }},
+                    {type: "separator"},
+                    {role: "togglefullscreen"}
+                ]
         },
-        {
+        {   
             label: "Help",
-            submenu: [
-                {
-                    label: "Code Examples",
-                    id: "Code Examples",
-                    submenu: [
+                submenu: [
+                    {
+                        label: "Code Examples",
+                        id: "Code Examples",
+                            submenu: [
 
-                        {label: "Basic", click: () => { window.webContents.send("menuExampleBasic"); }},
-                        {label: "Hearts", click: () => { window.webContents.send("menuExampleHearts"); }},
-                        {label: "Mario Bros", click: () => { window.webContents.send("menuExampleMarioBros"); }}
-                    ]
-                },
-                {role: "toggledevtools"}
-            ]
+                                {label: "Basic", click: () => { window.webContents.send("menuExampleBasic"); }},
+                                {label: "Hearts", click: () => { window.webContents.send("menuExampleHearts"); }},
+                                {label: "Mario Bros", click: () => { window.webContents.send("menuExampleMarioBros"); }}
+                            ]
+                    },
+                    {role: "toggledevtools"}
+                ]
         }
     ];
 
@@ -170,7 +177,7 @@ app.on("ready", () => {
         menuTemplate[4].submenu.unshift(
             {label: "About", click: () => { window.webContents.send("menuAbout"); }},
             {type: "separator"}
-        );
+        );          
     }
 
     const menu = Menu.buildFromTemplate(menuTemplate);
@@ -224,7 +231,7 @@ app.on("ready", () => {
                 layoutVerticalMenuItem.enabled = (orientation === "horizontal");
             }
         });
-
+        
         window.webContents.send("executeButtonRequest");
         window.webContents.send("orientationRequest");
     });

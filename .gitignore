@@ -8,6 +8,7 @@ resources/build/fonts/* # Whatever goes in here?
 resources/build/images/*
 resources/build/releases/
 resources/build/*.html
+releases/
 
 # Logs
 logs
