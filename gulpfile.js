@@ -10,6 +10,7 @@ const gulpUtil = require("gulp-util");
 const handlebars = require('gulp-handlebars');
 const minCSS = require("gulp-clean-css");
 const minHTML = require("gulp-htmlmin");
+const path = require('path');
 const postCSS = require("gulp-postcss");
 const sass = require("gulp-sass");
 const sourceMaps = require("gulp-sourcemaps");
@@ -19,44 +20,45 @@ const webpackUglify = require("uglifyjs-webpack-plugin");
 const wrap = require('gulp-wrap');
 
 
-//Constants
+// Define Build Constants
 const C = {
     AUTHOR: "Brodie Davis",
-    ORIGINAL_AUTHOR: "Geoffrey Mattie",
     TITLE: "ManuScript Personal Journal",
     WINDOWS_METADATA: "win32metadata"
 };
 
-//Config
+// Convert CLI args to Config object
 const config = {
-    CLEAN: gulpUtil.env.clean,
+    // If --development not specified, assume production mode
     DEVELOPMENT: gulpUtil.env.development,
-    PRODUCTION: gulpUtil.env.production
+    PRODUCTION: !gulpUtil.env.development
 };
 
 //Tasks
 const tasks = {
-    TRANSPILE_HANDLEBARS: "tanspile-handlebars",
-    TRANSPILE_JS: "transpile-js",
-    TRANSPILE_SASS: "transpile-sass",
-    TRANSPILE_HTML: "transpile-html",
+    // Compile all files
+    BUILD: "build",
+    // Delete compiled files
     CLEAN: "clean",
+    // Run in browser (dev mode)
+    RUN: "run",
+    // Package ALL OS's
     PACKAGE: "package",
+    // Create Linux Release
     PACKAGE_LINUX: "package-linux",
+    // Create MAC Release
     PACKAGE_MAC: "package-mac",
+    // Create Windows Release
     PACKAGE_WINDOWS: "package-windows"
 };
 
 //Paths
-const PATHS_ROOT = "./resources";
-
-const paths = {
-    ROOT: `${PATHS_ROOT}`,
-    BUILD: `${PATHS_ROOT}/build`,
-    SOURCE: `${PATHS_ROOT}/source`,
-    ICON: `${PATHS_ROOT}/source/images/icons`,
-    OUT: "./releases"
-};
+let paths = {};
+paths.ROOT   = path.join(__dirname, "resources");
+paths.OUT    = path.join(__dirname, "releases");
+paths.BUILD  = path.join(paths.ROOT, "build");
+paths.SOURCE = path.join(paths.ROOT, "source");
+paths.ICON   = path.join(paths.ROOT, "source", "images", "icons");
 
 //Folders todo: make this better
 const folders = {
@@ -75,7 +77,7 @@ const files = {
 
 // Build Commands
 const Command = {
-    APP_BUNDLE_ID: `--app-bundle-id=com.mattie.DataPixelsPlayground`,
+    APP_BUNDLE_ID: `--app-bundle-id=com.ManuScriptPersonalJournal`,
     ARCH: `--arch=x64`,
     ASAR: `--asar`,
     BASE: `electron-packager ./ --overwrite`,
@@ -126,47 +128,8 @@ function _clean_files(dir) {
     return del([dir])
 }
 
-/************ Tasks *************/
-// Task Package
-gulp.task(tasks.PACKAGE, () => {
-    const metadata = `${Command.APP_BUNDLE_ID} ${Command.PRODUCT_NAME} ${Command.COMPANY_NAME} ${Command.FILE_DESCRIPTION} ${Command.ORIGINAL_FILE_NAME}`;
-    const command = `${Command.PLATFORM}${Platform.LINUX},${Platform.MAC},${Platform.WINDOWS} ${metadata} ${BuildIcons.ALL}`;
-
-    _package(command);
-});
-
-// Task Package Linux
-gulp.task(tasks.PACKAGE_LINUX, () => {
-    const command = `${Command.PLATFORM}${Platform.LINUX} ${BuildIcons.LINUX}`;
-
-    _package(command);
-});
-
-// Task Package Mac
-gulp.task(tasks.PACKAGE_MAC, () => {
-    const metadata = `${Command.APP_BUNDLE_ID}`;
-    const command = `${Command.PLATFORM}${Platform.MAC} ${metadata} ${BuildIcons.MAC}`;
-
-    _package(command);
-});
-
-// Task Package Windows
-gulp.task(tasks.PACKAGE_WINDOWS, () => {
-    const metadata = `${Command.PRODUCT_NAME} ${Command.COMPANY_NAME} ${Command.FILE_DESCRIPTION} ${Command.ORIGINAL_FILE_NAME}`;
-    const command = `${Command.PLATFORM}${Platform.WINDOWS} ${metadata} ${BuildIcons.WINDOWS}`;
-
-    _package(command);
-});
-
-// Task Clean Built Files
-gulp.task(tasks.CLEAN, () => {
-    _clean_files(`${paths.BUILD}/${folders.JS}/*.js`);
-    _clean_files(`${paths.BUILD}/${folders.CSS}/*.css`);
-    _clean_files(`${paths.BUILD}/*.html`);
-});
-
-// Task Transpile JavaScript
-gulp.task(tasks.TRANSPILE_JS, () => {
+// Transpile JavaScript
+function transpileJs(){
     gulp.src(`${paths.SOURCE}/${folders.JS}/${files.JS}`)
         .pipe(
             webpackStream({
@@ -181,27 +144,27 @@ gulp.task(tasks.TRANSPILE_JS, () => {
                     }]
                 },
                 plugins: (config.PRODUCTION) ? [new webpackUglify({
-                                                    compress: {warnings: true},
-                                                    sourceMap: (config.DEVELOPMENT)})
-                                               ]
-                                             : [],
+                        compress: {warnings: true},
+                        sourceMap: (config.DEVELOPMENT)})
+                    ]
+                    : [],
                 output: {filename: `${files.JS}`},
                 devtool: (config.DEVELOPMENT) ? "inline-source-map" : ""
             }, webpack)
-            .on("error", (error) => gulpUtil.log(error)))
+                .on("error", (error) => gulpUtil.log(error)))
         .pipe(gulp.dest(`${paths.BUILD}/${folders.JS}`))
         .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
-});
+}
 
-// Task Transpile Sass
-gulp.task(tasks.TRANSPILE_SASS, () => {
+// Transpile Sass
+function transpileCss(){
     gulp.src(`${paths.SOURCE}/${folders.SASS}/${files.SASS}`)
         .pipe((config.DEVELOPMENT) ? sourceMaps.init() : gulpUtil.noop())
         .pipe(
             sass({
                 outFile: `${files.CSS}`
             })
-            .on("error", sass.logError))
+                .on("error", sass.logError))
         .pipe(
             postCSS([
                 autoPrefixer()
@@ -210,10 +173,10 @@ gulp.task(tasks.TRANSPILE_SASS, () => {
         .pipe((config.DEVELOPMENT) ? sourceMaps.write() : gulpUtil.noop())
         .pipe(gulp.dest(`${paths.BUILD}/${folders.CSS}`))
         .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
-});
+}
 
-// Task Build Handlebar Templates
-gulp.task(tasks.TRANSPILE_HANDLEBARS, () => {
+// Build Handlebar Templates
+function transpileTemplates(){
     gulp.src(`${paths.SOURCE}/templates/*.hbs`)
         .pipe(handlebars({
             handlebars: require('handlebars')
@@ -225,34 +188,84 @@ gulp.task(tasks.TRANSPILE_HANDLEBARS, () => {
         }))
         .pipe(concat('templates.js'))
         .pipe(gulp.dest(`${paths.BUILD}/${folders.JS}`));
-});
+}
 
-// Task Transpile HTML
-gulp.task(tasks.TRANSPILE_HTML, () => {
+// Transpile HTML
+function transpileHtml(){
     gulp.src(`${paths.SOURCE}/${files.HTML}`)
-        // Only minify in Production mode
+    // Only minify in Production mode
         .pipe((config.PRODUCTION) ? minHTML({collapseWhitespace: true}) : gulpUtil.noop())
         .pipe(gulp.dest(`${paths.BUILD}`))
         // Use BrowerSync if in Development mode
         .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
+}
+
+/************ Tasks *************/
+// Task Package
+gulp.task(tasks.PACKAGE, [TASKS.CLEAN, TASKS.BUILD], () => {
+    const metadata = `${Command.APP_BUNDLE_ID} ${Command.PRODUCT_NAME} ${Command.COMPANY_NAME} ${Command.FILE_DESCRIPTION} ${Command.ORIGINAL_FILE_NAME}`;
+    const command = `${Command.PLATFORM}${Platform.LINUX},${Platform.MAC},${Platform.WINDOWS} ${metadata} ${BuildIcons.ALL}`;
+
+    _package(command);
 });
 
-// Task Default
-gulp.task("default", [tasks.TRANSPILE_JS, tasks.TRANSPILE_SASS, tasks.TRANSPILE_HTML, tasks.TRANSPILE_HANDLEBARS], () => {
-    if (config.DEVELOPMENT) {
-        // Start Dev server (BrowserSync)
-        browserSync.init({
-            server: {
-                baseDir: `${paths.BUILD}`,
-                index: `${files.HTML}`
-            }
-        });
+// Task Package Linux
+gulp.task(tasks.PACKAGE_LINUX, [TASKS.CLEAN, TASKS.BUILD], () => {
+    const command = `${Command.PLATFORM}${Platform.LINUX} ${BuildIcons.LINUX}`;
 
-        // Watch Source files for changes
-        gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, [tasks.TRANSPILE_JS]);
-        gulp.watch(`${paths.SOURCE}/${folders.SASS}/**/*.scss`, [tasks.TRANSPILE_SASS]);
-        gulp.watch(`${paths.SOURCE}/${files.HTML}`, [tasks.TRANSPILE_HTML]);
-        gulp.watch(`${paths.SOURCE}/templates/*.hbs`, [tasks.TRANSPILE_HANDLEBARS]);
-
-    }
+    _package(command);
 });
+
+// Task Package Mac
+gulp.task(tasks.PACKAGE_MAC, [TASKS.CLEAN, TASKS.BUILD], () => {
+    const metadata = `${Command.APP_BUNDLE_ID}`;
+    const command = `${Command.PLATFORM}${Platform.MAC} ${metadata} ${BuildIcons.MAC}`;
+
+    _package(command);
+});
+
+// Task Package Windows
+gulp.task(tasks.PACKAGE_WINDOWS, [TASKS.CLEAN, TASKS.BUILD], () => {
+    const metadata = `${Command.PRODUCT_NAME} ${Command.COMPANY_NAME} ${Command.FILE_DESCRIPTION} ${Command.ORIGINAL_FILE_NAME}`;
+    const command = `${Command.PLATFORM}${Platform.WINDOWS} ${metadata} ${BuildIcons.WINDOWS}`;
+
+    _package(command);
+});
+
+// Task Clean Built Files
+gulp.task(tasks.CLEAN, () => {
+    _clean_files(`${paths.BUILD}/${folders.JS}/*.js`);
+    _clean_files(`${paths.BUILD}/${folders.CSS}/*.css`);
+    _clean_files(`${paths.BUILD}/*.html`);
+});
+
+// Task Compile everything
+gulp.task(tasks.BUILD, () => {
+    transpileJs();
+    transpileCss();
+    transpileTemplates();
+    transpileHtml();
+});
+
+// Task Compile and Start Dev Server in browser
+gulp.task(tasks.RUN, () => {
+    gulp.start(tasks.BUILD);
+
+    // Start Dev server (BrowserSync)
+    browserSync.init({
+        server: {
+            baseDir: `${paths.BUILD}`,
+            index: `${files.HTML}`
+        }
+    });
+
+    // Watch Source files for changes
+    gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, transpileJs);
+    gulp.watch(`${paths.SOURCE}/${folders.SASS}/**/*.scss`, transpileCss);
+    gulp.watch(`${paths.SOURCE}/${files.HTML}`, transpileHtml);
+    gulp.watch(`${paths.SOURCE}/templates/*.hbs`, transpileTemplates);
+});
+
+
+// Task Default - Start dev server
+gulp.task("default", tasks.RUN);

@@ -7,10 +7,10 @@
   "license": "MIT",
   "main": "main.js",
   "scripts": {
-    "dev": "gulp --development",
+    "dev": "gulp run --development",
     "clean": "gulp clean",
-    "build": "electron main.js",
-    "build-dev": "electron main.js --dev-tools",
+    "build": "gulp build && electron main.js",
+    "build-dev": "gulp build --development && electron main.js --dev-tools",
     "package": "gulp package",
     "package-linux": "gulp package-linux",
     "package-mac": "gulp package-mac",
