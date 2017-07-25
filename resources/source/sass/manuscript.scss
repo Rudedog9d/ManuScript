@@ -1,6 +1,6 @@
 @import "./modules/reset.scss";
 
-$page-margins: 15%;
+$page-margins: 20%;
 
 html {
   height: 100%;
@@ -18,6 +18,10 @@ body {
 .content-center {
   margin-left: $page-margins;
   margin-right: $page-margins;
+}
+
+#app {
+  margin-top: 10px;
 }
 
 .footer {

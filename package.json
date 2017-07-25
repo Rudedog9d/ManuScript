@@ -1,23 +1,28 @@
 {
-  "name": "name",
-  "version": "1.0.0",
-  "description": "description",
-  "author": "author",
-  "license": "license",
-  "main": "gulpfile.js",
+  "name": "manuscript",
+  "productName": "ManuScript Personal Journal",
+  "version": "0.0.1",
+  "description": "An Electronic Personal Journal",
+  "author": "Brodie Davis",
+  "license": "MIT",
+  "main": "main.js",
   "scripts": {
-    "dev": "gulp --development",
-    "prod": "gulp --production",
-    "dev-prod": "gulp --development --production",
-    "clean": "gulp clean"
+    "dev": "gulp run --development",
+    "clean": "gulp clean",
+    "build": "gulp build && electron main.js",
+    "build-dev": "gulp build --development && electron main.js --dev-tools",
+    "package": "gulp package",
+    "package-linux": "gulp package-linux",
+    "package-mac": "gulp package-mac",
+    "package-windows": "gulp package-windows"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
-    "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
-    "babel-preset-latest": "^6.24.1",
     "browser-sync": "^2.18.8",
     "del": "^3.0.0",
+    "electron": "^1.6.11",
+    "electron-packager": "^8.7.2",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.0.4",
     "gulp-concat": "^2.6.1",
@@ -39,6 +44,9 @@
     "last 2 versions"
   ],
   "dependencies": {
-    "handlebars": "^4.0.10"
+    "command-line-args": "^4.0.6",
+    "electron-window-state": "^4.1.1",
+    "handlebars": "^4.0.10",
+    "jquery": "^3.2.1"
   }
 }
