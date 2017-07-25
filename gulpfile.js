@@ -53,7 +53,7 @@ const tasks = {
 };
 
 //Paths
-let paths = {};
+var paths = {};
 paths.ROOT   = path.join(__dirname, "resources");
 paths.OUT    = path.join(__dirname, "releases");
 paths.BUILD  = path.join(paths.ROOT, "build");
@@ -202,7 +202,7 @@ function transpileHtml(){
 
 /************ Tasks *************/
 // Task Package
-gulp.task(tasks.PACKAGE, [TASKS.CLEAN, TASKS.BUILD], () => {
+gulp.task(tasks.PACKAGE, [tasks.CLEAN, tasks.BUILD], () => {
     const metadata = `${Command.APP_BUNDLE_ID} ${Command.PRODUCT_NAME} ${Command.COMPANY_NAME} ${Command.FILE_DESCRIPTION} ${Command.ORIGINAL_FILE_NAME}`;
     const command = `${Command.PLATFORM}${Platform.LINUX},${Platform.MAC},${Platform.WINDOWS} ${metadata} ${BuildIcons.ALL}`;
 
@@ -210,14 +210,14 @@ gulp.task(tasks.PACKAGE, [TASKS.CLEAN, TASKS.BUILD], () => {
 });
 
 // Task Package Linux
-gulp.task(tasks.PACKAGE_LINUX, [TASKS.CLEAN, TASKS.BUILD], () => {
+gulp.task(tasks.PACKAGE_LINUX, [tasks.CLEAN, tasks.BUILD], () => {
     const command = `${Command.PLATFORM}${Platform.LINUX} ${BuildIcons.LINUX}`;
 
     _package(command);
 });
 
 // Task Package Mac
-gulp.task(tasks.PACKAGE_MAC, [TASKS.CLEAN, TASKS.BUILD], () => {
+gulp.task(tasks.PACKAGE_MAC, [tasks.CLEAN, tasks.BUILD], () => {
     const metadata = `${Command.APP_BUNDLE_ID}`;
     const command = `${Command.PLATFORM}${Platform.MAC} ${metadata} ${BuildIcons.MAC}`;
 
@@ -225,7 +225,7 @@ gulp.task(tasks.PACKAGE_MAC, [TASKS.CLEAN, TASKS.BUILD], () => {
 });
 
 // Task Package Windows
-gulp.task(tasks.PACKAGE_WINDOWS, [TASKS.CLEAN, TASKS.BUILD], () => {
+gulp.task(tasks.PACKAGE_WINDOWS, [tasks.CLEAN, tasks.BUILD], () => {
     const metadata = `${Command.PRODUCT_NAME} ${Command.COMPANY_NAME} ${Command.FILE_DESCRIPTION} ${Command.ORIGINAL_FILE_NAME}`;
     const command = `${Command.PLATFORM}${Platform.WINDOWS} ${metadata} ${BuildIcons.WINDOWS}`;
 
@@ -268,4 +268,4 @@ gulp.task(tasks.RUN, () => {
 
 
 // Task Default - Start dev server
-gulp.task("default", tasks.RUN);
+gulp.task("default", [tasks.RUN], () => {});
