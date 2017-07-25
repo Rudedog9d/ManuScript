@@ -5,14 +5,12 @@
   "description": "An Electronic Personal Journal",
   "author": "Brodie Davis",
   "license": "MIT",
-  "main": "mainElectron.js",
+  "main": "main.js",
   "scripts": {
     "dev": "gulp --development",
-    "prod": "gulp --production",
-    "dev-prod": "gulp --development --production",
     "clean": "gulp clean",
-    "build": "electron mainElectron.js",
-    "run": "electron mainElectron.js",
+    "build": "electron main.js",
+    "build-dev": "electron main.js --dev-tools",
     "package": "gulp package",
     "package-linux": "gulp package-linux",
     "package-mac": "gulp package-mac",
@@ -20,9 +18,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
-    "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
-    "babel-preset-latest": "^6.24.1",
     "browser-sync": "^2.18.8",
     "del": "^3.0.0",
     "electron": "^1.6.11",
@@ -48,6 +44,7 @@
     "last 2 versions"
   ],
   "dependencies": {
+    "command-line-args": "^4.0.6",
     "electron-window-state": "^4.1.1",
     "handlebars": "^4.0.10",
     "jquery": "^3.2.1"

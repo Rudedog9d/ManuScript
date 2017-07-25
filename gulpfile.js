@@ -1,10 +1,13 @@
 //Dependencies
-//Dependencies
 const autoPrefixer = require("autoprefixer");
 const browserSync = require("browser-sync").create();
-const gulp = require("gulp");
+const concat = require('gulp-concat');
+const declare = require('gulp-declare');
 const del = require("del");
+const exec = require("child_process").exec;
+const gulp = require("gulp");
 const gulpUtil = require("gulp-util");
+const handlebars = require('gulp-handlebars');
 const minCSS = require("gulp-clean-css");
 const minHTML = require("gulp-htmlmin");
 const postCSS = require("gulp-postcss");
@@ -13,11 +16,7 @@ const sourceMaps = require("gulp-sourcemaps");
 const webpack = require("webpack");
 const webpackStream = require("webpack-stream");
 const webpackUglify = require("uglifyjs-webpack-plugin");
-const exec = require("child_process").exec;
-const handlebars = require('gulp-handlebars');
 const wrap = require('gulp-wrap');
-const declare = require('gulp-declare');
-const concat = require('gulp-concat');
 
 
 //Constants
@@ -110,7 +109,6 @@ const Platform = {
 //Execute Packager
 function _package(platformCommand) {
     const baseCommand = `${Command.BASE} ${Command.ASAR} ${Command.ARCH} ${Command.COPYRIGHT} ${Command.OUT}`;
-
     exec(`${baseCommand} ${platformCommand}`, (error, stdout, stderr) => {
         if (error) {
             console.error(error);
