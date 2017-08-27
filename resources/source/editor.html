@@ -15,24 +15,34 @@
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-lite.js"></script>-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.6.2/riot+compiler.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
   <script type="text/javascript" src="./js/main.js"></script>
 
   <!-- Import Templates -->
   <script src="./static/tags/navbar.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/markdown-card.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/markdown-editor.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/markdown-viewer.tag.html" type="riot/tag"></script>
 
   <link rel="icon" type="image/png" href="./static/images/favicon.png">
+
+  <!-- Import Page dependicies -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
 </head>
 <body>
-  <navbar></navbar>
+<navbar></navbar>
 
-  <div id="app" class="content-center">
-      <h1>Hello, World!</h1>
-      <a href="editor.html">Editor</a>
-  </div>
+<div id="app" class="content-center">
+  <markdown-card id="markdown-card" edit="true" title="First Saranac Thursday was a blast!"></markdown-card>
+</div>
+
+<div id="base"></div>
 
 <script>
     $(document).ready(function() {
         riot.mount('navbar');
+        riot.mount('markdown-card');
     });
 </script>
 </body>

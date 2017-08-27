@@ -5,6 +5,7 @@
 resources/build/css/
 resources/build/js/
 resources/build/*.html
+resources/build/static/tags/
 releases/
 
 # Logs

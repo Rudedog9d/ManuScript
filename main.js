@@ -1,4 +1,5 @@
 const electron = require('electron');
+var express = require('express');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -26,46 +27,49 @@ const RESOURCES = path.join(__dirname, "resources", "build");
 console.log(`Resources directory: ${RESOURCES}`);
 
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
+    // initialize express
+    var app = express();
+
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
       minWidth: 1000,
       minHeight: 800,
       title: "ManuScript Digital Journal",
       // todo: set icon dependent on OS
       icon: path.join(RESOURCES, "images", "Application256.png"),
       // backgroundColor: "#000000"
-  });
+    });
 
-  // Maximize window   on start
-  mainWindow.maximize();
+    // Maximize window   on start
+    mainWindow.maximize();
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
+    // and load the index.html of the app.
+    mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'resources', 'build', 'index.html'),
     protocol: 'file:',
     slashes: true
-  }));
+    }));
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+    // Open the DevTools.
+    // mainWindow.webContents.openDevTools()
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-  });
+    });
 
-  //Clear Storage Data
-  if (options['clear-storage-data']) {
+    //Clear Storage Data
+    if (options['clear-storage-data']) {
      mainWindow.webContents.session.clearStorageData();
-  }
+    }
 
-  //Open Developer Tools
-  if (options['dev-tools']) {
+    //Open Developer Tools
+    if (options['dev-tools']) {
       mainWindow.webContents.openDevTools();
-  }
+}
 } // END CREATE_WINDOW
 
 // This method will be called when Electron has finished

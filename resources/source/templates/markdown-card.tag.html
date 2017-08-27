@@ -1,0 +1,20 @@
+<markdown-card>
+  <div class="card">
+    <p>&nbsp;</p>
+    <h1 class="card-title center">{ title }</h1>
+    <div class="card-content">
+      <markdown-editor class="{ hide: !edit }"></markdown-editor>
+      <markdown-viewer refs="markdown-viewer" id="markdown-viewer" class="{ hide: edit }"></markdown-viewer>
+    </div>
+  </div>
+
+  <script>
+    this.title = opts.title || null;
+    this.edit = opts.edit || false;
+
+    this.on('mount', function () {
+//        $('#markdown-viewer').setMarkdown("# Title\nBlah blah stuffs");
+        console.log(this.refs)
+    })
+  </script>
+</markdown-card>

@@ -7,6 +7,7 @@
   "license": "MIT",
   "main": "main.js",
   "scripts": {
+    "start": "gulp run",
     "dev": "gulp run --development",
     "clean": "gulp clean",
     "build": "gulp build && electron main.js",
@@ -48,6 +49,8 @@
   "dependencies": {
     "command-line-args": "^4.0.6",
     "electron-window-state": "^4.1.1",
+    "express": "^4.15.4",
+    "gulp-riot": "^1.1.1",
     "handlebars": "^4.0.10",
     "jquery": "^3.2.1"
   }

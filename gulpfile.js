@@ -13,6 +13,7 @@ const minHTML = require("gulp-htmlmin");
 const path = require('path');
 const postCSS = require("gulp-postcss");
 const sass = require("gulp-sass");
+const riot = require("gulp-riot");
 const sourceMaps = require("gulp-sourcemaps");
 const webpack = require("webpack");
 const webpackStream = require("webpack-stream");
@@ -68,11 +69,11 @@ const folders = {
 };
 
 //Files todo: make this better
-const files = {
+var files = {
     JS: "main.js",
     CSS: "main.css",
     SASS: "manuscript.scss",
-    HTML: "index.html"
+    HTML: "editor.html"
 };
 
 // Build Commands
@@ -177,22 +178,13 @@ function transpileCss(){
 
 // Build Handlebar Templates
 function transpileTemplates(){
-    gulp.src(`${paths.SOURCE}/templates/*.hbs`)
-        .pipe(handlebars({
-            handlebars: require('handlebars')
-        }))
-        .pipe(wrap('Handlebars.template(<%= contents %>)'))
-        .pipe(declare({
-            namespace: 'ManuScript.templates',
-            noRedeclare: true, // Avoid duplicate declarations
-        }))
-        .pipe(concat('templates.js'))
-        .pipe(gulp.dest(`${paths.BUILD}/${folders.JS}`));
+    gulp.src(`${paths.SOURCE}/templates/*`)
+        .pipe(gulp.dest(`${paths.BUILD}/static/tags/`));
 }
 
 // Transpile HTML
 function transpileHtml(){
-    gulp.src(`${paths.SOURCE}/${files.HTML}`)
+    gulp.src(`${paths.SOURCE}/*.html`)
     // Only minify in Production mode
         .pipe((config.PRODUCTION) ? minHTML({collapseWhitespace: true}) : gulpUtil.noop())
         .pipe(gulp.dest(`${paths.BUILD}`))
@@ -237,6 +229,7 @@ gulp.task(tasks.CLEAN, () => {
     _clean_files(`${paths.BUILD}/${folders.JS}/*.js`);
     _clean_files(`${paths.BUILD}/${folders.CSS}/*.css`);
     _clean_files(`${paths.BUILD}/*.html`);
+    _clean_files(`${paths.BUILD}/static/tags/`);
 });
 
 // Task Compile everything
@@ -251,19 +244,21 @@ gulp.task(tasks.BUILD, () => {
 gulp.task(tasks.RUN, () => {
     gulp.start(tasks.BUILD);
 
+    var started = false;
+
     // Start Dev server (BrowserSync)
     browserSync.init({
         server: {
             baseDir: `${paths.BUILD}`,
-            index: `${files.HTML}`
+            index: `index.html`
         }
     });
 
     // Watch Source files for changes
     gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, transpileJs);
     gulp.watch(`${paths.SOURCE}/${folders.SASS}/**/*.scss`, transpileCss);
-    gulp.watch(`${paths.SOURCE}/${files.HTML}`, transpileHtml);
-    gulp.watch(`${paths.SOURCE}/templates/*.hbs`, transpileTemplates);
+    gulp.watch(`${paths.SOURCE}/**/*.html`, transpileHtml);
+    gulp.watch(`${paths.SOURCE}/templates/**/*.tag.html`, transpileTemplates);
 });
 
 
