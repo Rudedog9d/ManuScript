@@ -4,7 +4,7 @@
     <h1 class="card-title center">{ title }</h1>
     <div class="card-content">
       <markdown-editor class="{ hide: !edit }"></markdown-editor>
-      <markdown-viewer refs="markdown-viewer" id="markdown-viewer" class="{ hide: edit }"></markdown-viewer>
+      <markdown-viewer ref="markdown-viewer" id="markdown-viewer" class="{ hide: edit }"></markdown-viewer>
     </div>
   </div>
 
@@ -13,8 +13,7 @@
     this.edit = opts.edit || false;
 
     this.on('mount', function () {
-//        $('#markdown-viewer').setMarkdown("# Title\nBlah blah stuffs");
-        console.log(this.refs)
+        this.refs['markdown-viewer'].setMarkdown("# Title\nBlah blah stuffs");
     })
   </script>
 </markdown-card>

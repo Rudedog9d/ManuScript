@@ -13,12 +13,20 @@
   <!-- Javascript -->
   <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-lite.js"></script>-->
+  <script src="./node_modules/hammerjs/hammer.min.js"></script> <!-- Import hammerJS because apparently Materialize can't handle it -_-  -->
   <script src="./node_modules/materialize-css/dist/js/materialize.min.js"></script>
   <script src="./node_modules/riot/riot+compiler.min.js"></script>
+  <script src="./node_modules/marked/marked.min.js"></script>
   <script type="text/javascript" src="./static/js/manuscript.js"></script>
 
   <!-- Import Templates -->
   <script src="./static/tags/navbar.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/markdown-card.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/markdown-editor.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/markdown-viewer.tag.html" type="riot/tag"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
 
   <link rel="icon" type="image/png" href="./static/images/favicon.png">
 </head>
@@ -26,16 +34,22 @@
   <navbar></navbar>
 
   <div id="app" class="content-center">
+    <div id="home">
       <h1>Hello, World!</h1>
-      <a href="editor.html">Editor</a>
+      <a href="javascript:void(0)" onclick="showEditor">Editor</a>
+    </div>
+    <markdown-card id="markdown-card" ></markdown-card>
   </div>
 
 <script>
+    function showEditor() {
+      $('#home').hidden = true;
+      $('#markdown-card').hidden = false;
+    }
     $(document).ready(function() {
-        riot.mount('navbar');
+      riot.mount('navbar');
+      riot.mount('markdown-card');
     });
-
-    console.log(Manuscript)
 </script>
 </body>
 </html>

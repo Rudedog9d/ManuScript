@@ -1,5 +1,6 @@
 const electron = require('electron');
 var express = require('express');
+const window = require('electron-window');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -26,56 +27,57 @@ let mainWindow;
 const RESOURCES = path.join(__dirname, "resources");
 console.log(`Resources directory: ${RESOURCES}`);
 
+var ARGS = {};
+
+ARGS.config = require('./config') || {};
+
 function createWindow () {
     // initialize express
     var app = express();
 
     // Create the browser window.
-    mainWindow = new BrowserWindow({
+    const mainWindow = window.createWindow({
       minWidth: 1000,
       minHeight: 800,
       title: "ManuScript Digital Journal",
       // todo: set icon dependent on OS
       icon: path.join(RESOURCES, "images", "Application256.png"),
       // backgroundColor: "#000000"
-    });
+    })
 
     // Maximize window   on start
     mainWindow.maximize();
 
-    // and load the index.html of the app.
-    mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'resources', 'index.html'),
-    protocol: 'file:',
-    slashes: true
-    }));
+    mainWindow.showUrl(path.join(__dirname, 'resources', 'index.html'), ARGS, () => {
+      console.log('window is now visible!')
+    });
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
+      // Dereference the window object, usually you would store windows
+      // in an array if your app supports multi windows, this is the time
+      // when you should delete the corresponding element.
+      // mainWindow = null /* No longer required due to electron-window */
     });
 
     //Clear Storage Data
     if (options['clear-storage-data']) {
-     mainWindow.webContents.session.clearStorageData();
+      mainWindow.webContents.session.clearStorageData();
     }
 
     //Open Developer Tools
     if (options['dev-tools']) {
       mainWindow.webContents.openDevTools();
-}
+    }
 } // END CREATE_WINDOW
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

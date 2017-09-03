@@ -250,7 +250,7 @@ gulp.task(tasks.RUN, () => {
     // Start Dev server (BrowserSync)
     browserSync.init({
         server: {
-            baseDir: `${paths.BUILD}`,
+            baseDir: `resources`,
             index: `index.html`
         }
     });
