@@ -1,0 +1,37 @@
+<markdown-editor>
+  <textarea id="editor"></textarea>
+
+  <script>
+      var tag = this;
+      tag.on('mount', function () {
+          tag.simplemde = new SimpleMDE({
+              element: document.getElementById('editor'),
+              toolbar: [{
+                name: 'save',
+                action: tag.save,
+                className: 'fa fa-floppy-o',
+                title: 'Save'
+              }]
+          });
+      });
+
+      tag.save = () => {
+        console.log('saving content!');
+        var content = tag.get();
+        console.log(content);
+
+        var fs = require('fs');
+        fs.writeFile("/Temp/test.txt", content, function(err) {
+          if(err) {
+            return console.log(err);
+          }
+
+          console.log("The file was saved!");
+        });
+      }
+
+      tag.get = () => {
+        return tag.simplemde.value();
+      }
+  </script>
+</markdown-editor>

@@ -131,35 +131,35 @@ function _clean_files(dir) {
 
 // Transpile JavaScript
 function transpileJs(){
-    gulp.src(`${paths.SOURCE}/${folders.JS}/${files.JS}`)
-        .pipe(
-            webpackStream({
-                module: {
-                    rules: [{
-                        test: /\.js$/,
-                        loader: "babel-loader",
-                        exclude: /(node_modules)/,
-                        options: {
-                            presets: [["latest", {"es2015": {"modules": false}}]]
-                        }
-                    }]
-                },
-                plugins: (config.PRODUCTION) ? [new webpackUglify({
-                        compress: {warnings: true},
-                        sourceMap: (config.DEVELOPMENT)})
-                    ]
-                    : [],
-                output: {filename: `${files.JS}`},
-                devtool: (config.DEVELOPMENT) ? "inline-source-map" : ""
-            }, webpack)
-                .on("error", (error) => gulpUtil.log(error)))
-        .pipe(gulp.dest(`${paths.BUILD}/${folders.JS}`))
-        .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
+    // gulp.src(`${paths.SOURCE}/${folders.JS}/${files.JS}`)
+    //     .pipe(
+    //         webpackStream({
+    //             module: {
+    //                 rules: [{
+    //                     test: /\.js$/,
+    //                     loader: "babel-loader",
+    //                     exclude: /(node_modules)/,
+    //                     options: {
+    //                         presets: [["latest", {"es2015": {"modules": false}}]]
+    //                     }
+    //                 }]
+    //             },
+    //             plugins: (config.PRODUCTION) ? [new webpackUglify({
+    //                     compress: {warnings: true},
+    //                     sourceMap: (config.DEVELOPMENT)})
+    //                 ]
+    //                 : [],
+    //             output: {filename: `manuscript.js`},
+    //             devtool: (config.DEVELOPMENT) ? "inline-source-map" : ""
+    //         }, webpack)
+    //             .on("error", (error) => gulpUtil.log(error)))
+    //     // .pipe(gulp.dest(`${paths.BUILD}/${folders.JS}`))
+    //     // .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
 }
 
 // Transpile Sass
 function transpileCss(){
-    gulp.src(`${paths.SOURCE}/${folders.SASS}/${files.SASS}`)
+    gulp.src(`${paths.SOURCE}/${folders.CSS}/${files.SASS}`)
         .pipe((config.DEVELOPMENT) ? sourceMaps.init() : gulpUtil.noop())
         .pipe(
             sass({
@@ -172,24 +172,25 @@ function transpileCss(){
             ]))
         .pipe((config.PRODUCTION) ? minCSS() : gulpUtil.noop())
         .pipe((config.DEVELOPMENT) ? sourceMaps.write() : gulpUtil.noop())
-        .pipe(gulp.dest(`${paths.BUILD}/${folders.CSS}`))
-        .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
+        // .pipe(gulp.dest(`${paths.BUILD}/${folders.CSS}`))
+        .pipe(gulp.dest(`${paths.SOURCE}/${folders.CSS}`))
+        // .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
 }
 
 // Build Handlebar Templates
 function transpileTemplates(){
-    gulp.src(`${paths.SOURCE}/templates/*`)
-        .pipe(gulp.dest(`${paths.BUILD}/static/tags/`));
+    // gulp.src(`${paths.SOURCE}/templates/*`)
+    //     .pipe(gulp.dest(`${paths.BUILD}/static/tags/`));
 }
 
 // Transpile HTML
 function transpileHtml(){
-    gulp.src(`${paths.SOURCE}/*.html`)
-    // Only minify in Production mode
-        .pipe((config.PRODUCTION) ? minHTML({collapseWhitespace: true}) : gulpUtil.noop())
-        .pipe(gulp.dest(`${paths.BUILD}`))
-        // Use BrowerSync if in Development mode
-        .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
+    // gulp.src(`${paths.SOURCE}/*.html`)
+    // // Only minify in Production mode
+    //     .pipe((config.PRODUCTION) ? minHTML({collapseWhitespace: true}) : gulpUtil.noop())
+    //     .pipe(gulp.dest(`${paths.BUILD}`))
+    //     // Use BrowerSync if in Development mode
+    //     .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
 }
 
 /************ Tasks *************/

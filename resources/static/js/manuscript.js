@@ -1,17 +1,18 @@
-/**
- * Created by bdavis on 2/5/17.
- */
+Manuscript = {};
+
+Manuscript.root = '/'
+
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-function openNav() {
+Manuscript.openNav = function() {
     document.getElementById("mySidenav").style.width = "200px";
     // document.getElementById("main").style.marginLeft = "200px";
 }
 
 /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
-function closeNav() {
+Manuscript.closeNav = function() {
     document.getElementById("mySidenav").style.width = "0";
     // document.getElementById("main").style.marginLeft = "0";
 }
-function showItem(item_name){
+Manuscript.showItem = function(item_name){
     
 }

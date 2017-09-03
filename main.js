@@ -23,7 +23,7 @@ console.log(options);
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-const RESOURCES = path.join(__dirname, "resources", "build");
+const RESOURCES = path.join(__dirname, "resources");
 console.log(`Resources directory: ${RESOURCES}`);
 
 function createWindow () {
@@ -45,7 +45,7 @@ function createWindow () {
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'resources', 'build', 'index.html'),
+    pathname: path.join(__dirname, 'resources', 'index.html'),
     protocol: 'file:',
     slashes: true
     }));
