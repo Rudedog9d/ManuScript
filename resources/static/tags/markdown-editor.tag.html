@@ -1,17 +1,35 @@
 <markdown-editor>
-  <textarea id="editor"></textarea>
+  <div class="card">
+    <p>&nbsp;</p>
+    <div class="card-title center">
+      <input type="text" style="width: 70%; text-align: center" placeholder="Title" value="{ title }">
+      <!--<p>Date: <input type="text" id="datepicker"></p>-->
+    </div>
+    <div class="card-content">
+      <textarea id="editor"></textarea>
+
+      <a class="waves-effect waves-light btn materialize-red"><i class="material-icons right">cancel</i>Cancel</a>
+      <a class="waves-effect waves-light btn green right"><i class="material-icons right" onclick="{ save }">save</i>Save</a>
+    </div>
+  </div>
 
   <script>
       var tag = this;
+      tag.title = opts.title || null;
       tag.on('mount', function () {
           tag.simplemde = new SimpleMDE({
               element: document.getElementById('editor'),
-              toolbar: [{
+              toolbar: [
+                  'bold', 'italic', 'heading', '|',
+                  'quote', 'unordered-list', 'ordered-list', '|',
+                  'link', 'image', '|',
+                  'preview', 'side-by-side', 'fullscreen', '|',
+                  'guide', {
                 name: 'save',
                 action: tag.save,
                 className: 'fa fa-floppy-o',
-                title: 'Save'
-              }]
+                title: 'Save'}
+              ]
           });
       });
 

@@ -34,21 +34,15 @@
   <navbar></navbar>
 
   <div id="app" class="content-center">
-    <div id="home">
-      <h1>Hello, World!</h1>
-      <a href="javascript:void(0)" onclick="showEditor">Editor</a>
-    </div>
-    <markdown-card id="markdown-card" ></markdown-card>
+    <markdown-viewer id="markdown-editor" title="Sample data"></markdown-viewer>
+    <markdown-editor id="markdown-editor" title="Sample data"></markdown-editor>
   </div>
 
 <script>
-    function showEditor() {
-      $('#home').hidden = true;
-      $('#markdown-card').hidden = false;
-    }
     $(document).ready(function() {
       riot.mount('navbar');
-      riot.mount('markdown-card');
+      riot.mount('markdown-editor');
+      riot.mount('markdown-viewer');
     });
 </script>
 </body>

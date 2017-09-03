@@ -1,16 +1,26 @@
 <markdown-viewer>
-  <div id="markdown-content"></div>
+  <div class="card">
+    <div class="card-title center { title ? '' : 'hide' }">
+      <p>&nbsp;</p>
+      { title }
+    </div>
+    <div class="card-content">
+      <p id="markdown-content"></p>
+    </div>
+  </div>
 
   <script>
-      this.markdown = opts.markdown || "# No Text for you!";
+      var tag = this;
+      tag.title = opts.title || null;
+      tag.markdown = opts.markdown || "### Oops!\nThere's nothing here";
 
-      this.setMarkdown = function (md) {
-          this.markdown = md;
-          $('#markdown-content').html(marked(this.markdown));
+      tag.setMarkdown = function (md) {
+          tag.markdown = md;
+          $('#markdown-content').html(marked(tag.markdown));
       };
 
-      this.on('mount', function () {
-          this.setMarkdown(this.markdown);
+      tag.on('mount', function () {
+          tag.setMarkdown(tag.markdown);
       });
   </script>
 </markdown-viewer>
