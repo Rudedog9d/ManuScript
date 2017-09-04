@@ -57,23 +57,13 @@ const tasks = {
 var paths = {};
 paths.ROOT   = path.join(__dirname, "resources");
 paths.OUT    = path.join(__dirname, "releases");
-paths.BUILD  = path.join(paths.ROOT, "build");
-paths.SOURCE = path.join(paths.ROOT, "source");
-paths.ICON   = path.join(paths.ROOT, "source", "images", "icons");
-
-//Folders todo: make this better
-const folders = {
-    JS: "js",
-    CSS: "css",
-    SASS: "sass"
-};
+paths.ICON   = path.join(paths.ROOT, "static",  "images");
 
 //Files todo: make this better
 var files = {
     JS: "main.js",
     CSS: "main.css",
     SASS: "manuscript.scss",
-    HTML: "editor.html"
 };
 
 // Build Commands
@@ -159,7 +149,7 @@ function transpileJs(){
 
 // Transpile Sass
 function transpileCss(){
-    gulp.src(`${paths.SOURCE}/${folders.CSS}/${files.SASS}`)
+    gulp.src(`${paths.ROOT}/static/css/${files.SASS}`)
         .pipe((config.DEVELOPMENT) ? sourceMaps.init() : gulpUtil.noop())
         .pipe(
             sass({
@@ -173,14 +163,8 @@ function transpileCss(){
         .pipe((config.PRODUCTION) ? minCSS() : gulpUtil.noop())
         .pipe((config.DEVELOPMENT) ? sourceMaps.write() : gulpUtil.noop())
         // .pipe(gulp.dest(`${paths.BUILD}/${folders.CSS}`))
-        .pipe(gulp.dest(`${paths.SOURCE}/${folders.CSS}`))
+        .pipe(gulp.dest(`${paths.ROOT}/static/css`))
         // .pipe((config.DEVELOPMENT) ? browserSync.stream() : gulpUtil.noop());
-}
-
-// Build Handlebar Templates
-function transpileTemplates(){
-    // gulp.src(`${paths.SOURCE}/templates/*`)
-    //     .pipe(gulp.dest(`${paths.BUILD}/static/tags/`));
 }
 
 // Transpile HTML
@@ -227,18 +211,14 @@ gulp.task(tasks.PACKAGE_WINDOWS, [tasks.CLEAN, tasks.BUILD], () => {
 
 // Task Clean Built Files
 gulp.task(tasks.CLEAN, () => {
-    _clean_files(`${paths.BUILD}/${folders.JS}/*.js`);
-    _clean_files(`${paths.BUILD}/${folders.CSS}/*.css`);
-    _clean_files(`${paths.BUILD}/*.html`);
-    _clean_files(`${paths.BUILD}/static/tags/`);
+    _clean_files(`${paths.ROOT}/static/css/*.css`);
 });
 
 // Task Compile everything
 gulp.task(tasks.BUILD, () => {
-    transpileJs();
+    // transpileJs();
     transpileCss();
-    transpileTemplates();
-    transpileHtml();
+    // transpileHtml();
 });
 
 // Task Compile and Start Dev Server in browser
@@ -256,10 +236,9 @@ gulp.task(tasks.RUN, () => {
     });
 
     // Watch Source files for changes
-    gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, transpileJs);
+    // gulp.watch(`${paths.SOURCE}/${folders.JS}/**/*.js`, transpileJs);
     gulp.watch(`${paths.SOURCE}/${folders.SASS}/**/*.scss`, transpileCss);
-    gulp.watch(`${paths.SOURCE}/**/*.html`, transpileHtml);
-    gulp.watch(`${paths.SOURCE}/templates/**/*.tag.html`, transpileTemplates);
+    // gulp.watch(`${paths.SOURCE}/**/*.html`, transpileHtml);
 });
 
 
