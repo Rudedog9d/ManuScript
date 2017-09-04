@@ -2,20 +2,22 @@
   <div class="card">
     <p>&nbsp;</p>
     <div class="card-title center">
-      <input type="text" style="width: 70%; text-align: center" placeholder="Title" value="{ title }">
+      <input type="text" style="width: 70%; text-align: center" ref="title" placeholder="Title" value="{ _title }">
       <!--<p>Date: <input type="text" id="datepicker"></p>-->
     </div>
     <div class="card-content">
       <textarea id="editor"></textarea>
 
       <a class="waves-effect waves-light btn materialize-red"><i class="material-icons right">cancel</i>Cancel</a>
-      <a class="waves-effect waves-light btn green right"><i class="material-icons right" onclick="{ save }">save</i>Save</a>
+      <a class="waves-effect waves-light btn green right" onclick="{ save }"><i class="material-icons right">save</i>Save</a>
     </div>
   </div>
 
   <script>
       var tag = this;
-      tag.title = opts.title || null;
+      tag._title = opts.dataTitle || null;
+      tag._id = opts._id || null;
+
       tag.on('mount', function () {
           tag.simplemde = new SimpleMDE({
               element: document.getElementById('editor'),
@@ -34,22 +36,31 @@
       });
 
       tag.save = () => {
-        console.log('saving content!');
-        var content = tag.get();
-        console.log(content);
+        var obj = Manuscript.savePost(
+            {
+              title: tag.getTitle(),
+              content: tag.getContent()
+            },
+            tag._id
+        );
 
-        var fs = require('fs');
-        fs.writeFile("/Temp/test.txt", content, function(err) {
-          if(err) {
-            return console.log(err);
-          }
+        Manuscript.info("Post saved successfully!", obj);
 
-          console.log("The file was saved!");
-        });
-      }
+        if(!tag._id) {
+          tag._id = obj._id;
+        }
+      };
 
-      tag.get = () => {
+      tag.getContent = () => {
         return tag.simplemde.value();
-      }
+      };
+
+      tag.getTitle = function () {
+        return tag.refs.title.value
+      };
+
+      tag.setTitle = function (val) {
+        return tag.refs.title.value = val
+      };
   </script>
 </markdown-editor>

@@ -1,10 +1,13 @@
 const electron = require('electron');
-var express = require('express');
+const express = require('express');
 const window = require('electron-window');
+const path = require('path');
+const fs = require('fs');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+
 // Command Line Parser
 const commandLineArgs = require('command-line-args');
 
@@ -14,22 +17,18 @@ const optionDefinitions = [
     { name: 'clear-storage-data', alias: 'S', type: Boolean },
 ];
 
-const path = require('path');
-const url = require('url');
-
 const options = commandLineArgs(optionDefinitions);
-console.log(options);
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
-
 const RESOURCES = path.join(__dirname, "resources");
+const ARGS = {};
+
 console.log(`Resources directory: ${RESOURCES}`);
 
-var ARGS = {};
-
 ARGS.config = require('./config') || {};
+
+// Check if data directory exists, and try to create it if it doesn't
+if(!fs.existsSync(ARGS.config.dataDirectory)) {
+  fs.mkdirSync(ARGS.config.dataDirectory);
+}
 
 function createWindow () {
     // initialize express
