@@ -1,6 +1,7 @@
 @import "./modules/reset.scss";
 
 $page-margins: 5%;
+$icon-sidebar: 6em;
 
 html {
   height: 100%;
@@ -15,7 +16,13 @@ body {
 
 }
 
+// Side nav
+#icon-side-nav {
+  width: $icon-sidebar;
+}
+
 .content-center {
+  padding-left: $icon-sidebar;  // Offset for Sidebar
   margin-left: $page-margins;
   margin-right: $page-margins;
 }

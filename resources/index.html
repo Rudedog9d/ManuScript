@@ -20,7 +20,7 @@
   <script type="text/javascript" src="./static/js/manuscript.js"></script>
 
   <!-- Import Templates -->
-  <script src="./static/tags/navbar.tag.html" type="riot/tag"></script>
+  <script src="static/tags/navigation.tag.html" type="riot/tag"></script>
   <script src="./static/tags/markdown-editor.tag.html" type="riot/tag"></script>
   <script src="./static/tags/markdown-viewer.tag.html" type="riot/tag"></script>
 
@@ -30,16 +30,27 @@
   <link rel="icon" type="image/png" href="./static/images/favicon.png">
 </head>
 <body>
-  <navbar></navbar>
+  <navigation></navigation>
 
   <div id="app" class="content-center">
-    <markdown-viewer id="markdown-editor" data-title="Sample data"></markdown-viewer>
-    <markdown-editor id="markdown-editor" data-title="Sample data"></markdown-editor>
+    <div id="tab-editor">
+      <markdown-editor id="markdown-editor" data-title="Sample data"></markdown-editor>
+    </div>
+
+    <div id="tab-viewer">
+      <markdown-viewer id="markdown-editor" data-title="Sample data"></markdown-viewer>
+    </div>
   </div>
+
+  <!-- Set up Materialize tabs - Make sure this matches the entries in navbar -->
+  <ul class="tabs hide">
+    <li class="tab"><a href="#tab-editor">Editor</a></li>
+    <li class="tab"><a href="#tab-viewer">Viewer</a></li>
+  </ul>
 
 <script>
     $(document).ready(function() {
-      riot.mount('navbar');
+      riot.mount('navigation');
       riot.mount('markdown-editor');
       riot.mount('markdown-viewer');
     });

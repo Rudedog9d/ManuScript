@@ -47,6 +47,8 @@ function createWindow () {
     // Maximize window   on start
     mainWindow.maximize();
 
+    // Send the configuration via ARGS on initial page load -
+    // ARGS will NOT be sent in every request, save off what you need
     mainWindow.showUrl(path.join(__dirname, 'resources', 'index.html'), ARGS, () => {
       console.log('window is now visible!')
     });

@@ -1,0 +1,100 @@
+<navigation>
+  <style>
+    .nav-wrapper .brand-logo {
+      text-decoration: none;
+    }
+    .icon {
+      /*height: 300px;*/
+      width: 100%;
+      /*align-items: center;*/
+    }
+  </style>
+
+  <!-- Fix Sidebar with Nav Icons -->
+  <ul id="icon-side-nav" class="side-nav fixed">
+    <li class="grey darken-4">
+      <a data-activates="slide-out" class="waves-effect waves-light button-collapse">
+        <i class="material-icons white-text">menu</i>
+      </a>
+    </li>
+    <li class="{item.className}" each="{ item in navItems }">
+      <a if="{ item.tabId }" onclick="{ selectTab }" href="#">
+        <i class="material-icons {item.className}">{ item.icon }</i>
+      </a>
+    </li>
+  </ul>
+
+  <ul id="slide-out" class="side-nav">
+    <li>
+      <img class="icon" src="./static/images/ManuScript.png" >
+      <h3 class="brand-logo center-align">
+        Manuscript
+      </h3>
+    </li>
+    <li class="divider"></li>
+    <li class="{item.className}" each="{ item in navItems }">
+      <a if="{ item.tabId }" onclick="{ selectTab }" href="#">
+        <i class="material-icons">{ item.icon }</i>
+        { item.name }
+      </a>
+    </li>
+  </ul>
+
+  <script>
+    var tag = this;
+
+    /**
+     * List of navigation items
+     * name: Name to display to the user
+     * icon: Materialize Icon name
+     * tabId: ID of the tab to navigate to (required)
+     * className: Class to add to the <li> item (useful for dividers and coloring)
+     */
+    tag.navItems = [
+      {
+        name: 'Editor',
+        icon: 'edit',
+        tabId: 'tab-editor',
+        className: ''
+      },
+      {
+        name: 'Viewer',
+        icon: 'remove_red_eye',
+        tabId: 'tab-viewer',
+        className: ''
+      },
+      {
+        className: 'divider'
+      },
+      {
+        name: 'Post List',
+        icon: 'view_list',
+        tabId: 'tab-post-list',
+        className: ''
+      },
+      {
+        name: 'New Post',
+        icon: 'note_add',
+        tabId: 'tab-new-post',
+        className: ''
+      }
+    ];
+
+    tag.selectTab = function (e) {
+      // Selects the tab container on index.html, and sets the correct tab
+      $('ul.tabs').tabs('select_tab', e.item.item.tabId);
+    };
+
+    $(document).ready(function() {
+      $('.button-collapse').sideNav({
+        menuWidth: 300, // Default is 300
+        closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+        draggable: true, // Choose whether you can drag to open on touch screens,
+//        onOpen: function(el) { /* Do Stuff */ }, // A function to be called when sideNav is opened
+//        onClose: function(el) { /* Do Stuff */ }, // A function to be called when sideNav is closed
+      }
+    );
+    });
+  </script>
+
+</navigation>

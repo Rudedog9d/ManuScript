@@ -12,7 +12,10 @@ var Manuscript;
   }
 
   // Make user config available to frontend
-  Manuscript.config = window.__args__.config;
+  if(window.__args__ && window.__args__.config) {
+    window.localStorage.setItem('config', JSON.stringify(window.__args__.config))
+  }
+  Manuscript.config = JSON.parse(window.localStorage.getItem('config'));
 
   // Set up logging with Toast and console messages
   /**

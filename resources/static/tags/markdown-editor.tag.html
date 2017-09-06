@@ -46,7 +46,7 @@
 
         Manuscript.info("Post saved successfully!", obj);
 
-        if(!tag._id) {
+        if(!tag._id && obj && obj._id) {
           tag._id = obj._id;
         }
       };
