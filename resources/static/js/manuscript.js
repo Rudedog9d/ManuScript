@@ -69,7 +69,9 @@ var Manuscript;
     Manuscript.error('Database initialization error', e);
   }
 
-  Manuscript.savePost = function(post, id) {
+  Manuscript.db = {};
+
+  Manuscript.db.savePost = function(post, id) {
     if(id) {
       // If an ID is provided, update the existing record
       return Manuscript._db.posts.update({_id: id}, post, {upsert: true})
@@ -79,28 +81,50 @@ var Manuscript;
     }
   };
 
-  Manuscript.getPostsByTitle = function(title) {
+  Manuscript.db.getPostsByTitle = function(title) {
     return Manuscript._db.posts.find({
       title: title
     })
   };
 
-  Manuscript.getPostByTitle = function(title) {
+  Manuscript.db.getPostByTitle = function(title) {
     return Manuscript._db.posts.findOne({
       title: title
     })
   };
 
-  Manuscript.getPostsById = function(_id) {
+  Manuscript.db.getPostsById = function(_id) {
     return Manuscript._db.posts.find({
       _id: _id
     })
   };
 
-  Manuscript.getPostById = function(_id){
+  Manuscript.db.getPostById = function(_id){
     return Manuscript._db.posts.findOne({
       _id: _id
     })
+  };
+
+  /**
+   * Wrapper to query the database - allows for limit/offset options
+   * @param options.offset: Defines start position of search results
+   * @param options.limit: Defines how many results to return
+   * @returns {Array} of database objects
+   */
+  Manuscript.db.find = function (query, options) {
+    options = options || {};
+    let offset = options.offset || 0;
+    let limit = (( options.limit === 0 ? Infinity : options.limit ) || 25) + offset;
+    let results = Manuscript._db.posts.find(query);
+    let rLen = results.length;
+    let ret = [];
+
+    // store limit and rLen in varaibles to avoid doing math each loop
+    for(i = offset; i < limit && i < rLen; i++) {
+      ret.push(results[i])
+    }
+
+    return ret;
   };
 
   /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */

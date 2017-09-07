@@ -23,6 +23,7 @@
   <script src="static/tags/navigation.tag.html" type="riot/tag"></script>
   <script src="./static/tags/markdown-editor.tag.html" type="riot/tag"></script>
   <script src="./static/tags/markdown-viewer.tag.html" type="riot/tag"></script>
+  <script src="./static/tags/post-list.tag.html" type="riot/tag"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
@@ -34,11 +35,15 @@
 
   <div id="app" class="content-center">
     <div id="tab-editor">
-      <markdown-editor id="markdown-editor" data-title="Sample data"></markdown-editor>
+      <markdown-editor id="tag-markdown-editor" data-title="Sample data"></markdown-editor>
     </div>
 
     <div id="tab-viewer">
-      <markdown-viewer id="markdown-editor" data-title="Sample data"></markdown-viewer>
+      <markdown-viewer id="tag-markdown-viewer" data-title="Sample data"></markdown-viewer>
+    </div>
+
+    <div id="tab-post-list">
+      <post-list id="tag-post-list"></post-list>
     </div>
   </div>
 
@@ -46,13 +51,13 @@
   <ul class="tabs hide">
     <li class="tab"><a href="#tab-editor">Editor</a></li>
     <li class="tab"><a href="#tab-viewer">Viewer</a></li>
+    <li class="tab"><a href="#tab-post-list">Post List</a></li>
   </ul>
 
 <script>
     $(document).ready(function() {
-      riot.mount('navigation');
-      riot.mount('markdown-editor');
-      riot.mount('markdown-viewer');
+      // fuck it, mount 'em all
+      tags = riot.mount('*');
     });
 </script>
 </body>

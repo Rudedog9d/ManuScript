@@ -18,7 +18,7 @@
       </a>
     </li>
     <li class="{item.className}" each="{ item in navItems }">
-      <a if="{ item.tabId }" onclick="{ selectTab }" href="#">
+      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#">
         <i class="material-icons {item.className}">{ item.icon }</i>
       </a>
     </li>
@@ -33,7 +33,7 @@
     </li>
     <li class="divider"></li>
     <li class="{item.className}" each="{ item in navItems }">
-      <a if="{ item.tabId }" onclick="{ selectTab }" href="#">
+      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#">
         <i class="material-icons">{ item.icon }</i>
         { item.name }
       </a>
@@ -54,13 +54,13 @@
       {
         name: 'Editor',
         icon: 'edit',
-        tabId: 'tab-editor',
+        tabId: 'editor',
         className: ''
       },
       {
         name: 'Viewer',
         icon: 'remove_red_eye',
-        tabId: 'tab-viewer',
+        tabId: 'viewer',
         className: ''
       },
       {
@@ -69,23 +69,38 @@
       {
         name: 'Post List',
         icon: 'view_list',
-        tabId: 'tab-post-list',
+        tabId: 'post-list',
         className: ''
       },
       {
         name: 'New Post',
         icon: 'note_add',
-        tabId: 'tab-new-post',
+        tabId: 'new-post',
         className: ''
       }
     ];
 
-    tag.selectTab = function (e) {
+    tag.onSelectTab = function (e) {
       // Selects the tab container on index.html, and sets the correct tab
-      $('ul.tabs').tabs('select_tab', e.item.item.tabId);
+      tag.selectTab(e.item.item.tabId)
+    };
+
+    tag.selectTab = function (tabId) {
+      $('ul.tabs').tabs('select_tab', 'tab-' + tabId);
+      riot.update(tabId);
+
+      // Store the user's last select tab
+      window.localStorage.setItem('tab', tabId)
     };
 
     $(document).ready(function() {
+      // Set the tab to where the user left off
+      // todo query param instead of local storage
+      tabId = window.localStorage.getItem('tab');
+      if(tabId) {
+        tag.selectTab(tabId)
+      }
+
       $('.button-collapse').sideNav({
         menuWidth: 300, // Default is 300
         closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor

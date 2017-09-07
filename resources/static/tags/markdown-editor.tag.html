@@ -36,7 +36,7 @@
       });
 
       tag.save = () => {
-        var obj = Manuscript.savePost(
+        var obj = Manuscript.db.savePost(
             {
               title: tag.getTitle(),
               content: tag.getContent()
