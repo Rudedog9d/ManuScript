@@ -71,7 +71,7 @@
         tag.post = Manuscript.db.findOne({ _id: postId }) || { 'title': "", 'content': "" };
 
         tag.setContent(tag.post.content);
-        tag.setDate(tag.post.date);
+//        tag.setDate(tag.post.date);
       });
 
       tag.save = () => {
@@ -101,7 +101,6 @@
       };
 
       tag.setDate = (date) => {
-        console.log(date)
         d = new Date(date | "");
         dateStr = d.toString().split(' ');
         console.log(d, dateStr);

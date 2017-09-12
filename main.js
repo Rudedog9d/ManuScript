@@ -11,19 +11,28 @@ const BrowserWindow = electron.BrowserWindow;
 // Command Line Parser
 const commandLineArgs = require('command-line-args');
 
-const optionDefinitions = [
+const VERSION = "0.0.1";
+
+const options = commandLineArgs([
+    { name: 'version', alias: 'V', type: Boolean },
     { name: 'verbose', alias: 'v', type: Boolean },
     { name: 'dev-tools', alias: 'd', type: Boolean },
     { name: 'clear-storage-data', alias: 'S', type: Boolean },
-];
+]);
 
-const options = commandLineArgs(optionDefinitions);
+
+if(options.version) {
+  console.log("Manuscript", VERSION);
+  exit(1)
+}
+
 const RESOURCES = path.join(__dirname, "resources");
+const CONFIG = require('./config') || {};
 const ARGS = {};
 
 console.log(`Resources directory: ${RESOURCES}`);
 
-ARGS.config = require('./config') || {};
+ARGS.config = CONFIG;
 
 // Check if data directory exists, and try to create it if it doesn't
 if(!fs.existsSync(ARGS.config.dataDirectory)) {
@@ -42,7 +51,7 @@ function createWindow () {
       // todo: set icon dependent on OS
       icon: path.join(RESOURCES, "images", "Application256.png"),
       // backgroundColor: "#000000"
-    })
+    });
 
     // Maximize window   on start
     mainWindow.maximize();
@@ -52,9 +61,6 @@ function createWindow () {
     mainWindow.showUrl(path.join(__dirname, 'resources', 'index.html'), ARGS, () => {
       console.log('window is now visible!')
     });
-
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -70,7 +76,7 @@ function createWindow () {
     }
 
     //Open Developer Tools
-    if (options['dev-tools']) {
+    if (options['dev-tools'] || CONFIG.mode === 'development') {
       mainWindow.webContents.openDevTools();
     }
 } // END CREATE_WINDOW

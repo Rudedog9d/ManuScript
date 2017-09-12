@@ -145,6 +145,8 @@ var Manuscript;
   };
 
   Manuscript.showTab = function (tabId) {
+    // todo store in query item
+    // todo write browser history
     $('ul.tabs').tabs('select_tab', 'tab-' + tabId);
 
     // Store the user's last select tab
