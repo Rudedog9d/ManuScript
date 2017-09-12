@@ -1,4 +1,5 @@
 @import "./modules/reset.scss";
+@import "../../node_modules/materialize-css/sass/materialize";
 
 $page-margins: 5%;
 $icon-sidebar: 6em;
@@ -19,6 +20,10 @@ body {
 // Side nav
 #icon-side-nav {
   width: $icon-sidebar;
+}
+
+.side-nav {
+  @extend .blue-grey, .lighten-4;
 }
 
 .content-center {

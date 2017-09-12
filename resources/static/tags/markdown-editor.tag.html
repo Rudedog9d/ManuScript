@@ -8,9 +8,12 @@
   </style>
   <div class="card">
     <p>&nbsp;</p>
-    <div class="card-title center">
+    <div class="row center">
       <input type="text" style="width: 70%; text-align: center" ref="title" placeholder="Title" value="{ post.title }">
-      <!--<p>Date: <input type="text" id="datepicker"></p>-->
+    </div>
+    <div class="row center">
+      <label for="datepicker">Date</label>
+      <input type="text" id="datepicker" class="datepicker" style="width: 10em; text-align: center">
     </div>
     <div class="card-content">
       <textarea id="editor"></textarea>
@@ -30,23 +33,31 @@
       tag.postId = null;
 
       tag.on('mount', function () {
-          tag.simplemde = new SimpleMDE({
-              element: document.getElementById('editor'),
-              toolbar: [
-                  'bold', 'italic', 'heading', '|',
-                  'quote', 'unordered-list', 'ordered-list', '|',
-                  'link', 'image', '|',
-                  'preview', 'side-by-side', 'fullscreen', '|',
-                  'guide',
-                  {
-                    name: 'save',
-                    action: tag.save,
-                    className: 'fa fa-floppy-o',
-                    title: 'Save'
-                  },
-              ]
-          });
-          console.log('markdown-editor mounted!', tag)
+        // init SimpleMde
+        tag.simplemde = new SimpleMDE({
+            element: document.getElementById('editor'),
+            toolbar: [
+                'bold', 'italic', 'heading', '|',
+                'quote', 'unordered-list', 'ordered-list', '|',
+                'link', 'image', '|',
+                'preview', 'side-by-side', 'fullscreen', '|',
+                'guide',
+                {
+                  name: 'save',
+                  action: tag.save,
+                  className: 'fa fa-floppy-o',
+                  title: 'Save'
+                },
+            ]
+        });
+
+        // init Materialize Datepicker
+        $('.datepicker').pickadate({
+          selectMonths: true,
+          selectYears: 100,
+        });
+
+        console.log('markdown-editor mounted!', tag)
       });
 
       tag.on('update', function (e) {
