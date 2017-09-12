@@ -11,15 +11,16 @@
   </style>
 
   <!-- Fix Sidebar with Nav Icons -->
-  <ul id="icon-side-nav" class="side-nav fixed">
+  <ul id="icon-side-nav" class="side-nav fixed blue-grey lighten-4">
     <li class="grey darken-4">
       <a data-activates="slide-out" class="waves-effect waves-light button-collapse">
         <i class="material-icons white-text">menu</i>
       </a>
     </li>
     <li class="{item.className}" each="{ item in navItems }">
-      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#">
-        <i class="material-icons {item.className}">{ item.icon }</i>
+      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#{ item.tabId }"
+         class="{ item.disabled && item.disabled() ? 'red-text' : 'green-text' }">
+        <i class="material-icons {item.icon.className}">{ item.icon.name }</i>
       </a>
     </li>
   </ul>
@@ -33,8 +34,8 @@
     </li>
     <li class="divider"></li>
     <li class="{item.className}" each="{ item in navItems }">
-      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#">
-        <i class="material-icons">{ item.icon }</i>
+      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#{ item.tabId }">
+        <i class="{item.icon.className} material-icons">{ item.icon.name }</i>
         { item.name }
       </a>
     </li>
@@ -53,30 +54,42 @@
     tag.navItems = [
       {
         name: 'Editor',
-        icon: 'edit',
+        icon: {
+          name: 'edit'
+        },
         tabId: 'editor',
         className: ''
       },
       {
         name: 'Viewer',
-        icon: 'remove_red_eye',
+        icon: {
+          name: 'remove_red_eye'
+        },
         tabId: 'viewer',
-        className: ''
+        className: '',
+        disabled: function () {
+          return Manuscript.tags.viewer && Manuscript.tags.viewer.post.content.length < 1;
+        }
       },
       {
         className: 'divider'
       },
       {
         name: 'Post List',
-        icon: 'view_list',
+        icon: {
+          name: 'view_list'
+        },
         tabId: 'post-list',
         className: ''
       },
       {
         name: 'New Post',
-        icon: 'note_add',
+        icon: {
+          name: 'note_add',
+          className: 'green-text'
+        },
         tabId: 'new-post',
-        className: ''
+        className: '',
       }
     ];
 
@@ -86,11 +99,8 @@
     };
 
     tag.selectTab = function (tabId) {
-      $('ul.tabs').tabs('select_tab', 'tab-' + tabId);
+      Manuscript.showTab(tabId);
       riot.update(tabId);
-
-      // Store the user's last select tab
-      window.localStorage.setItem('tab', tabId)
     };
 
     $(document).ready(function() {

@@ -1,26 +1,49 @@
 <markdown-viewer>
-  <div class="card">
-    <div class="card-title center { title ? '' : 'hide' }">
+  <div class="card { post.content ? '' : 'hide' }">
+    <div class="card-title center { post.title ? '' : 'hide' }">
       <p>&nbsp;</p>
-      { title }
+      { post.title }
     </div>
-    <div class="card-content">
-      <p id="markdown-content"></p>
+    <div id="viewer-content" class="card-content">
     </div>
   </div>
 
   <script>
       var tag = this;
-      tag.title = opts.dataTitle || null;
-      tag.markdown = opts.markdown || "### Oops!\nThere's nothing here";
+      Manuscript.tags['viewer'] = tag;
 
-      tag.setMarkdown = function (md) {
-          tag.markdown = md;
-          $('#markdown-content').html(marked(tag.markdown));
+      tag.postId = null;
+      tag.post = {
+        title: "",
+        content: ""
       };
 
+      tag.on('update', function (e={}) {
+        if(e.post) {
+          tag.post = e.post;
+          return;
+        }
+        postId = e.postId || tag.postId;
+
+        if(!postId) {
+          // If no post id, set post to an error
+          tag.post = {
+            'title': "",
+            'content': "# An unknown error has occurred"
+          };
+        } else {
+          // retrieve post
+          tag.post = Manuscript.db.findOne({
+            _id: postId
+          });
+        }
+
+        // render markdown
+        $('#viewer-content').html(marked(tag.post.content));
+      });
+
       tag.on('mount', function () {
-          tag.setMarkdown(tag.markdown);
+          console.log('markdown-viewer mounted!')
       });
   </script>
 </markdown-viewer>
