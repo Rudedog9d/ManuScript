@@ -13,7 +13,7 @@
     </div>
     <div class="row center">
       <label for="datepicker">Date</label>
-      <input type="text" id="datepicker" class="datepicker" style="width: 10em; text-align: center">
+      <input type="text" id="datepicker" ref="datepicker" class="datepicker" style="width: 10em; text-align: center">
     </div>
     <div class="card-content">
       <textarea id="editor"></textarea>
@@ -28,7 +28,8 @@
       Manuscript.tags['editor'] = tag;
       tag.post = {
         'title': "",
-        'content': ""
+        'content': "",
+        date: ""
       };
       tag.postId = null;
 
@@ -55,6 +56,7 @@
         $('.datepicker').pickadate({
           selectMonths: true,
           selectYears: 100,
+          closeOnSelect: true
         });
 
         console.log('markdown-editor mounted!', tag)
@@ -63,17 +65,19 @@
       tag.on('update', function (e) {
         console.log('markdown-editor update', tag);
         // Get post based on ID
-        postId = e && e.postId ? e.postId : tag.postId;
+        postId =  e && e.hasOwnProperty('postId') ? e.postId : tag.postId;
 
         // retrieve post or set to empty values
         tag.post = Manuscript.db.findOne({ _id: postId }) || { 'title': "", 'content': "" };
 
-        tag.simplemde.value(tag.post.content);
+        tag.setContent(tag.post.content);
+        tag.setDate(tag.post.date);
       });
 
       tag.save = () => {
         tag.post.title = tag.getTitle();
         tag.post.content = tag.getContent();
+        tag.post.date = tag.getDate();
         var obj = Manuscript.db.savePost(tag.post, tag.postId);
 
         Manuscript.info("Post saved successfully!", obj);
@@ -85,6 +89,23 @@
 
       tag.getContent = () => {
         return tag.simplemde.value();
+      };
+
+      tag.setContent = (content) => {
+        return tag.simplemde.value(content);
+      };
+
+      tag.getDate = () => {
+        let val = tag.refs.datepicker.value;
+        return val ? new Date(val) : new Date()
+      };
+
+      tag.setDate = (date) => {
+        console.log(date)
+        d = new Date(date | "");
+        dateStr = d.toString().split(' ');
+        console.log(d, dateStr);
+        return tag.refs.datepicker.value = d[1] + ' ' + d[2] + ', ' + d[3]
       };
 
       tag.getTitle = function () {

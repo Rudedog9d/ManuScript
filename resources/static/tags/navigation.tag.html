@@ -90,12 +90,18 @@
         },
         tabId: 'new-post',
         className: '',
+        action: function () {
+          tag.selectTab('editor');
+          Manuscript.updateTags({ postId: null })
+        }
       }
     ];
 
     tag.onSelectTab = function (e) {
       // Selects the tab container on index.html, and sets the correct tab
-      tag.selectTab(e.item.item.tabId)
+      if(typeof e.item.item.action === "function")
+        e.item.item.action();
+      tag.selectTab(e.item.item.tabId);
     };
 
     tag.selectTab = function (tabId) {

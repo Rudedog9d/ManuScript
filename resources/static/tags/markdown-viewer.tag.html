@@ -19,11 +19,7 @@
       };
 
       tag.on('update', function (e={}) {
-        if(e.post) {
-          tag.post = e.post;
-          return;
-        }
-        postId = e.postId || tag.postId;
+        postId = e && e.hasOwnProperty('postId') ? e.postId : tag.postId;
 
         if(!postId) {
           // If no post id, set post to an error
