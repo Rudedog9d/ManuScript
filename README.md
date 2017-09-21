@@ -1,6 +1,16 @@
 # **ManuScript - Personal Journaling Software**
 Built using [Electron](https://electron.atom.io/) with love.
 
+## Demo-able Features
+
+- Creating a New Post
+- Post List
+- Post Viewing Modal
+- Post Editor
+- File List
+- File Editor (Metadata)
+  - Upload or Drag 'n Drop
+
 ## **Install Node.js**
 Installation of Node.js is required:  [**Download Here**](https://nodejs.org/en/)
 
