@@ -61,7 +61,7 @@ var Manuscript;
   try {
     // Attempt to connect to the database, and sends an error via toast if it fails
     Manuscript._db = require('diskdb');
-    if(!Manuscript._db.connect(Manuscript.config.dataDirectory, ['posts'])) {
+    if(!Manuscript._db.connect(Manuscript.config.dataDirectory, ['posts', 'files'])) {
       throw "Could not connect to database";
     }
     Manuscript.info("Successfully connected to database");

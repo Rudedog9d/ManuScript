@@ -1,0 +1,103 @@
+<file-editor>
+  <!-- Modal Structure -->
+  <div id="file-editor-modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s6">
+              <input value="{file.name}" id="filename" type="text" class="validate">
+              <label for="filename">File Name</label>
+            </div>
+            <div class="input-field col s6 { file && file._id ? '' : 'hide' }">
+              <input disabled value="{file._id}" id="id" type="text" class="validate">
+              <label for="id">Database ID</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s10">
+              <input value="{file.path}" id="filepath" type="text">
+              <label for="filepath">File Path</label>
+            </div>
+            <div class="input-field col s2">
+              <input id="file-input" type="file" style="visibility:hidden" onchange="{ onFilePicked }"/>
+              <input type="button" value="Pick a File" class="btn" onclick="$('#file-input').click();" />
+            </div>
+          </div>
+          <div class="row">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea value="file.description" id="description" class="materialize-textarea"></textarea>
+                  <label for="description">Description</label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a class="waves-effect waves-light btn materialize-red left" onclick="{close}"><i class="material-icons right">cancel</i>Cancel</a>
+      <a class="waves-effect waves-light btn green right" onclick="{save}"><i class="material-icons right">save</i>Save</a>
+    </div>
+  </div>
+
+  <script>
+    const tag = this;
+    tag.file = {};
+    Manuscript.tags['file-editor'] = tag;
+
+    tag.open = function () {
+      $('#file-editor-modal').modal('open');
+    };
+
+    tag.close = function () {
+      $('#file-editor-modal').modal('close');
+    };
+
+    tag.edit = function (file) {
+      console.log('editing', file)
+//      tag.file = file;
+      tag.update({file: file});
+      tag.open();
+    };
+
+    tag.onFilePicked = function (e) {
+      console.log(e);
+      tag.file = e.target.files[0];
+      tag.update();
+    };
+
+    tag.save = function () {
+      if(!tag.file || !tag.file.path){
+        Manuscript.warning("Must enter a valid filepath!");
+        return
+      }
+      tag.trigger('save');
+
+      obj = {
+        name: $('#filename')[0].value,
+        path: $('#filepath')[0].value,
+        size: tag.file.size,
+        type: tag.file.type, // Todo: create dropdown for this
+        description: $('#description')[0].value
+      };
+      // todo: handle updating here
+      Manuscript._db.files.save(obj);
+
+      tag.file = {};
+      tag.close();
+      tag.trigger('saved')
+    };
+
+    tag.on('updated', function (opts) {
+      console.log('file editor updated!');
+      Materialize.updateTextFields();
+    });
+
+    tag.on('mount', function () {
+      console.log('file-editor mounted!');
+    });
+  </script>
+</file-editor>

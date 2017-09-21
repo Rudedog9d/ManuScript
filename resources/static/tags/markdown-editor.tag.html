@@ -40,8 +40,13 @@
             toolbar: [
                 'bold', 'italic', 'heading', '|',
                 'quote', 'unordered-list', 'ordered-list', '|',
-                'link', 'image', '|',
-                'preview', 'side-by-side', 'fullscreen', '|',
+                'link', {
+                  name: 'image',
+                  action: tag.insertImage,
+                  className: 'fa fa-image',
+                  title: 'Insert Image'
+                },
+                '|', 'preview', 'side-by-side', 'fullscreen', '|',
                 'guide',
                 {
                   name: 'save',
@@ -59,13 +64,15 @@
           closeOnSelect: true
         });
 
-        console.log('markdown-editor mounted!', tag)
+        console.log('markdown-editor mounted!')
       });
 
-      tag.on('update', function (e) {
-        console.log('markdown-editor update', tag);
+      tag.on('update', function (opts) {
+        if(opts && opts.noDbLoad){
+          return;
+        }
         // Get post based on ID
-        postId =  e && e.hasOwnProperty('postId') ? e.postId : tag.postId;
+        postId =  opts && opts.hasOwnProperty('postId') ? opts.postId : tag.postId;
 
         // retrieve post or set to empty values
         tag.post = Manuscript.db.findOne({ _id: postId }) || { 'title': "", 'content': "" };
@@ -73,6 +80,16 @@
         tag.setContent(tag.post.content);
 //        tag.setDate(tag.post.date);
       });
+
+      tag.insertImage = function () {
+        cb = function (file) {
+          content = tag.getContent();
+          content +=  '![' + file.name + '](' + file.path + ')';
+          tag.setContent(content);
+          tag.update({noDbLoad: true});
+        };
+        Manuscript.tags['file-picker'].insertImage(cb)
+      };
 
       tag.save = () => {
         tag.post.title = tag.getTitle();

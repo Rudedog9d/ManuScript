@@ -1,0 +1,121 @@
+<file-picker>
+  <div id="file-picker-modal" class="modal bottom-sheet">
+    <div class="modal-content">
+      <h4>
+        Files
+        <a onclick="{ uploadNewFile }" class="waves-effect waves-light btn right"><i class="material-icons right">attach_file</i>Upload A File</a>
+      </h4>
+
+      <!-- File List -->
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Path</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr each="{ file in files }">
+            <td>{file.name}</td>
+            <td>{file.path}</td>
+            <td class="truncate">{file.description}</td>
+            <td>
+              <!-- Controls -->
+              <a onclick="{ onInsertImage }" class="waves-effect waves-light btn right { showInsert ? '' : 'hide' }"><i class="material-icons">insert_photo</i>Insert</a>
+              <a onclick="{ onDeleteImage }" class="waves-effect waves-light btn right red"><i class="material-icons">delete</i>Delete</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="modal-footer">
+      <a onclick="{ close }" class="waves-effect waves-light btn red"><i class="material-icons right">close</i>Close</a>
+    </div>
+  </div>
+
+  <file-editor></file-editor>
+
+  <script>
+    const tag = this;
+    tag.files = [];
+    tag.newFiles = [];
+    tag.showInsert = false;
+    tag.insertImageCB = null;
+    Manuscript.tags['file-picker'] = tag;
+
+    tag.open = function () {
+      $('#file-picker-modal').modal('open');
+    };
+
+    tag.close = function () {
+      $('#file-picker-modal').modal('close');
+    };
+
+    tag.uploadNewFile = function () {
+      Manuscript.tags['file-editor'].edit({})
+    };
+
+    tag.onDeleteImage = function (e) {
+      if(e && e.item.file._id) {
+        Manuscript._db.files.remove({_id: e.item.file._id})
+      }
+      tag.update();
+    };
+
+    tag.insertImage = function (cb) {
+      tag.insertImageCB = cb;
+      tag.showInsert = true;
+      tag.update();
+      tag.open();
+    };
+
+    tag.onInsertImage = function (e) {
+      if(tag.insertImageCB){
+        tag.insertImageCB(e.item.file);
+        tag.insertImageCB = null;
+      }
+      tag.showInsert = false;
+      tag.close()
+    };
+
+    tag.on('update', function () {
+      tag.files = Manuscript._db.files.find();
+    });
+
+    tag.on('mount', function () {
+      console.log('file-picker mounted!');
+      $('.modal').modal();
+
+      Manuscript.tags['file-editor'].on('saved', function () {
+        console.log('hell yea');
+        tag.update();
+      });
+
+      // Set up event listeners to catch drag-n-drop file
+      document.ondragover = document.ondrop = (ev) => {
+        ev.preventDefault();
+      };
+
+      document.body.ondrop = (ev) => {
+        ev.preventDefault();
+
+        // todo handle multiple files
+        tag.newFiles.concat(ev.dataTransfer.files);
+        console.log(tag.newFiles);
+
+        file = ev.dataTransfer.files[0];
+        console.log(file);
+        if(file){
+          Manuscript.tags['file-editor'].edit(file)
+        }
+//        for(i in ev.dataTransfer.files) {
+////          console.log(i, ev.dataTransfer.files[i]);
+//          Manuscript.tags['file-editor'].edit(ev.dataTransfer.files[i]);
+//        }
+      };
+    });
+  </script>
+</file-picker>

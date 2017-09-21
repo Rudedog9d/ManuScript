@@ -18,7 +18,7 @@
       </a>
     </li>
     <li class="{item.className}" each="{ item in navItems }">
-      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#{ item.tabId }"
+      <a if="{ item.icon }" onclick="{ onSelectTab }" href="#{ item.tabId }"
          class="{ item.disabled && item.disabled() ? 'red-text' : 'green-text' }">
         <i class="material-icons {item.icon.className}">{ item.icon.name }</i>
       </a>
@@ -34,7 +34,7 @@
     </li>
     <li class="divider"></li>
     <li class="{item.className}" each="{ item in navItems }">
-      <a if="{ item.tabId }" onclick="{ onSelectTab }" href="#{ item.tabId }">
+      <a if="{ item.name }" onclick="{ onSelectTab }" href="#{ item.tabId }">
         <i class="{item.icon.className} material-icons">{ item.icon.name }</i>
         { item.name }
       </a>
@@ -52,6 +52,7 @@
      * className: Class to add to the <li> item (useful for dividers and coloring)
      */
     tag.navItems = [
+      // Editor
       {
         name: 'Editor',
         icon: {
@@ -60,6 +61,7 @@
         tabId: 'editor',
         className: ''
       },
+      // Viewer
       {
         name: 'Viewer',
         icon: {
@@ -71,6 +73,7 @@
           return Manuscript.tags.viewer && Manuscript.tags.viewer.post.content.length < 1;
         }
       },
+      // Divider
       {
         className: 'divider'
       },
@@ -82,6 +85,7 @@
         tabId: 'post-list',
         className: ''
       },
+      // New Post
       {
         name: 'New Post',
         icon: {
@@ -94,6 +98,22 @@
           tag.selectTab('editor');
           Manuscript.updateTags({ postId: null })
         }
+      },
+      // Divider
+      {
+        className: 'divider'
+      },
+      // Files
+      {
+        name: 'Files',
+        icon: {
+          name: 'attach_file',
+          className: ''
+        },
+        className: '',
+        action: function () {
+          Manuscript.tags['file-picker'].open();
+        }
       }
     ];
 
@@ -101,7 +121,8 @@
       // Selects the tab container on index.html, and sets the correct tab
       if(typeof e.item.item.action === "function")
         e.item.item.action();
-      tag.selectTab(e.item.item.tabId);
+      if(e.item.item.tabId)
+        tag.selectTab(e.item.item.tabId);
     };
 
     tag.selectTab = function (tabId) {
