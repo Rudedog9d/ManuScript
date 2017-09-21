@@ -90,7 +90,6 @@
       $('.modal').modal();
 
       Manuscript.tags['file-editor'].on('saved', function () {
-        console.log('hell yea');
         tag.update();
       });
 
@@ -104,10 +103,10 @@
 
         // todo handle multiple files
         tag.newFiles.concat(ev.dataTransfer.files);
-        console.log(tag.newFiles);
+//        console.log(tag.newFiles);
 
         file = ev.dataTransfer.files[0];
-        console.log(file);
+//        console.log(file);
         if(file){
           Manuscript.tags['file-editor'].edit(file)
         }

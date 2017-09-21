@@ -1,10 +1,11 @@
 <markdown-viewer>
-  <div class="card { post.content ? '' : 'hide' }">
-    <div class="card-title center { post.title ? '' : 'hide' }">
-      <p>&nbsp;</p>
-      { post.title }
+  <div id="viewer-modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4 class="center">{ post.title }</h4>
+      <div id="viewer-content"></div>
     </div>
-    <div id="viewer-content" class="card-content">
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat red-text">Close</a>
     </div>
   </div>
 
@@ -12,10 +13,22 @@
       var tag = this;
       Manuscript.tags['viewer'] = tag;
 
-      tag.postId = null;
       tag.post = {
         title: "",
         content: ""
+      };
+
+      tag.open = function () {
+        $('#viewer-modal').modal('open');
+      };
+
+      tag.close= function () {
+        $('#viewer-modal').modal('close');
+      };
+
+      tag.show = function (postId) {
+        tag.update({postId: postId});
+        tag.open();
       };
 
       tag.on('update', function (e={}) {
@@ -25,7 +38,7 @@
           // If no post id, set post to an error
           tag.post = {
             'title': "",
-            'content': "### There's nothing here. Go write something!"
+            'content': "### Oops. Something went wrong!"
           };
         } else {
           // retrieve post
@@ -33,13 +46,16 @@
             _id: postId
           });
         }
+      });
 
+      tag.on('updated', function () {
         // render markdown
         $('#viewer-content').html(marked(tag.post.content));
       });
 
       tag.on('mount', function () {
-          console.log('markdown-viewer mounted!')
+          console.log('markdown-viewer mounted!');
+          $('.modal').modal();
       });
   </script>
 </markdown-viewer>

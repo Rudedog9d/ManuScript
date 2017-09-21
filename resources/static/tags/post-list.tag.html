@@ -40,8 +40,10 @@
     };
 
     tag.onViewPost = function (e) {
-      Manuscript.showTab('viewer');
-      tag._setPost(e);
+//      Manuscript.showTab('viewer');
+      e.preventUpdate = true;
+      Manuscript.tags.viewer.show(e.item.post._id)
+//      tag._setPost(e);
     };
 
     tag.onEditPost = function (e) {

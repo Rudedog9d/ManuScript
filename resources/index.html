@@ -37,11 +37,7 @@
 
   <div id="app" class="content-center">
     <div id="tab-editor">
-      <markdown-editor id="tag-markdown-editor" data-title="Sample data"></markdown-editor>
-    </div>
-
-    <div id="tab-viewer">
-      <markdown-viewer id="tag-markdown-viewer" data-title="Sample data"></markdown-viewer>
+      <markdown-editor id="tag-markdown-editor"></markdown-editor>
     </div>
 
     <div id="tab-post-list">
@@ -52,11 +48,11 @@
   <!-- Set up Materialize tabs - Make sure this matches the entries in navbar -->
   <ul class="tabs hide">
     <li class="tab"><a href="#tab-editor">Editor</a></li>
-    <li class="tab"><a href="#tab-viewer">Viewer</a></li>
     <li class="tab"><a href="#tab-post-list">Post List</a></li>
   </ul>
 
   <file-picker></file-picker>
+  <markdown-viewer id="tag-markdown-viewer"></markdown-viewer>
 
 <script>
     $(document).ready(function() {
